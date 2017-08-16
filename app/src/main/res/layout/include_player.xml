@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="com.example.romankubik.kubikplayer.presentation.main.MainActivity">
+
+    <ImageView
+        android:id="@+id/iv_randomize"
+        android:layout_width="@dimen/img_click"
+        android:layout_height="@dimen/img_click"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintRight_toLeftOf="@+id/iv_previous"
+        app:layout_constraintTop_toTopOf="@+id/iv_previous"
+        app:srcCompat="@drawable/ic_shuffle_black_24dp" />
+
+    <ImageView
+        android:id="@+id/iv_circle"
+        android:layout_width="@dimen/img_click"
+        android:layout_height="@dimen/img_click"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintLeft_toRightOf="@+id/iv_next"
+        app:layout_constraintTop_toTopOf="@+id/iv_next"
+        app:srcCompat="@drawable/ic_repeat_black_24dp" />
+
+
+    <ImageView
+        android:id="@+id/iv_play"
+        android:layout_width="@dimen/img_click"
+        android:layout_height="@dimen/img_click"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_artist"
+        app:srcCompat="@drawable/ic_play_circle_filled_black_24dp" />
+
+    <ImageView
+        android:id="@+id/iv_next"
+        android:layout_width="@dimen/img_click"
+        android:layout_height="@dimen/img_click"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintLeft_toRightOf="@+id/iv_play"
+        app:layout_constraintTop_toTopOf="@+id/iv_play"
+        app:srcCompat="@drawable/ic_skip_next_black_24dp" />
+
+    <ImageView
+        android:id="@+id/iv_previous"
+        android:layout_width="@dimen/img_click"
+        android:layout_height="@dimen/img_click"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintRight_toLeftOf="@+id/iv_play"
+        app:layout_constraintTop_toTopOf="@+id/iv_play"
+        app:srcCompat="@drawable/ic_skip_previous_black_24dp" />
+
+    <TextView
+        android:id="@+id/tv_song"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Awesome song"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_current" />
+
+    <TextView
+        android:id="@+id/tv_artist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Awesome artist"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_song" />
+
+    <TextView
+        android:id="@+id/tv_current"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="0:00"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="5:55"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <SeekBar
+        android:id="@+id/sb_volume"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintLeft_toRightOf="@+id/iv_lower"
+        app:layout_constraintRight_toLeftOf="@+id/iv_higher"
+        app:layout_constraintTop_toBottomOf="@+id/iv_play"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginBottom="8dp" />
+
+    <ImageView
+        android:id="@+id/iv_lower"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/sb_volume"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/sb_volume"
+        app:srcCompat="@drawable/ic_volume_down_black_24dp" />
+
+    <ImageView
+        android:id="@+id/iv_higher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/sb_volume"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/sb_volume"
+        app:srcCompat="@drawable/ic_volume_up_black_24dp" />
+
+
+</android.support.constraint.ConstraintLayout>
