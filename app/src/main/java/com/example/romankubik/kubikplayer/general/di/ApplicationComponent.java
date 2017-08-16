@@ -2,6 +2,8 @@ package com.example.romankubik.kubikplayer.general.di;
 
 import android.content.Context;
 
+import com.example.romankubik.kubikplayer.interaction.player.MusicPlayerService;
+import com.example.romankubik.kubikplayer.interaction.player.di.PlayerModule;
 import com.example.romankubik.kubikplayer.presentation.template.di.TemplateComponent;
 import com.example.romankubik.kubikplayer.presentation.template.di.TemplateModule;
 
@@ -14,9 +16,11 @@ import dagger.Component;
  */
 
 @Singleton
-@Component(modules = {ApplicationModule.class})
+@Component(modules = {ApplicationModule.class, PlayerModule.class})
 public interface ApplicationComponent {
     Context getApplicationContext();
+
+    void inject(MusicPlayerService service);
 
     TemplateComponent templateComponent(TemplateModule templateModule);
 }
