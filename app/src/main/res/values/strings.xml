@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Kubik Player</string>
+    <string name="title_my_library">My Library</string>
 </resources>
