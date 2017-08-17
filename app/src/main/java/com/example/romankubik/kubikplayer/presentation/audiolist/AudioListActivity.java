@@ -5,10 +5,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
 import com.example.romankubik.kubikplayer.R;
+import com.example.romankubik.kubikplayer.general.widgets.AnimatedGridRecyclerView;
 import com.example.romankubik.kubikplayer.interaction.entity.Track;
 import com.example.romankubik.kubikplayer.presentation.audiolist.di.AudioListModule;
 
@@ -28,7 +28,7 @@ import static com.example.romankubik.kubikplayer.general.android.PlayerApplicati
 public class AudioListActivity extends AppCompatActivity implements AudioListPresenter.View {
 
     @BindView(R.id.rv_audio_list)
-    RecyclerView rvAudioList;
+    AnimatedGridRecyclerView rvAudioList;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -68,6 +68,7 @@ public class AudioListActivity extends AppCompatActivity implements AudioListPre
         rvAudioList.setLayoutManager(gridLayoutManager);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.margin_tiny);
         rvAudioList.addItemDecoration(new AudioColumnDecoration(spacingInPixels));
+        rvAudioList.scheduleLayoutAnimation();
     }
 
 }
