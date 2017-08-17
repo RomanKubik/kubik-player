@@ -46,6 +46,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile "com.android.support:recyclerview-v7:${rootProject.ext.supportLibVersion}"
     compile "com.android.support:design:${rootProject.ext.supportLibVersion}"
+    compile "com.android.support:palette-v7:${rootProject.ext.supportLibVersion}"
 
     // Permissions
     compile 'com.github.hotchemi:permissionsdispatcher:2.4.0'
