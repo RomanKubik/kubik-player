@@ -9,6 +9,7 @@ public class Track {
     private String artist;
     private String song;
     private String album;
+    private byte[] image;
 
     public String getArtist() {
         return artist;
@@ -32,5 +33,13 @@ public class Track {
 
     public void setAlbum(String album) {
         this.album = album;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 }

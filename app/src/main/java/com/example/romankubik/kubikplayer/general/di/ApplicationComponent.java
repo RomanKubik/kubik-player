@@ -2,7 +2,7 @@ package com.example.romankubik.kubikplayer.general.di;
 
 import android.content.Context;
 
-import com.example.romankubik.kubikplayer.interaction.finder.di.FinderModule;
+import com.example.romankubik.kubikplayer.interaction.media.di.FinderModule;
 import com.example.romankubik.kubikplayer.interaction.player.MusicPlayerService;
 import com.example.romankubik.kubikplayer.interaction.player.di.PlayerModule;
 import com.example.romankubik.kubikplayer.presentation.audiolist.di.AudioListComponent;

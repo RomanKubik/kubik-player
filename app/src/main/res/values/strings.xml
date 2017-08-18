@@ -6,4 +6,5 @@
     <string name="btn_deny">Deny</string>
     <string name="msg_playlist_is_empty">Playlist is empty</string>
     <string name="action_select_directory">Select directory</string>
+    <string name="unknown">Unknown</string>
 </resources>

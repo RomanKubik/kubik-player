@@ -1,4 +1,4 @@
-package com.example.romankubik.kubikplayer.interaction.finder;
+package com.example.romankubik.kubikplayer.interaction.media;
 
 import android.os.Environment;
 

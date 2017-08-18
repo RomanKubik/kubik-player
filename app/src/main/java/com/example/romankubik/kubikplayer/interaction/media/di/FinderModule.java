@@ -1,7 +1,7 @@
-package com.example.romankubik.kubikplayer.interaction.finder.di;
+package com.example.romankubik.kubikplayer.interaction.media.di;
 
 import com.example.romankubik.kubikplayer.interaction.Interactor;
-import com.example.romankubik.kubikplayer.interaction.finder.MediaFinder;
+import com.example.romankubik.kubikplayer.interaction.media.MediaFinder;
 
 import javax.inject.Singleton;
 

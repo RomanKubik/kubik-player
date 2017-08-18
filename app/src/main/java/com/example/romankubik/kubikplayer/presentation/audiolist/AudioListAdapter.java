@@ -75,8 +75,9 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
         }
 
         void setItem(Track track) {
-            if (track.getSong() != null) tvSong.setText(track.getSong());
+            tvSong.setText(track.getSong());
             if (track.getArtist() != null) tvArtist.setText(track.getArtist());
+            else tvArtist.setText(R.string.unknown);
         }
     }
 }
