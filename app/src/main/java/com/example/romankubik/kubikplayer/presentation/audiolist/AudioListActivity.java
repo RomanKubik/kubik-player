@@ -1,11 +1,16 @@
 package com.example.romankubik.kubikplayer.presentation.audiolist;
 
+import android.Manifest;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.example.romankubik.kubikplayer.R;
 import com.example.romankubik.kubikplayer.general.widgets.AnimatedGridRecyclerView;
@@ -18,6 +23,10 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
 import static com.example.romankubik.kubikplayer.general.android.PlayerApplication.component;
 
@@ -25,12 +34,15 @@ import static com.example.romankubik.kubikplayer.general.android.PlayerApplicati
  * Created by roman.kubik on 8/17/17.
  */
 
+@RuntimePermissions
 public class AudioListActivity extends AppCompatActivity implements AudioListPresenter.View {
 
     @BindView(R.id.rv_audio_list)
     AnimatedGridRecyclerView rvAudioList;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
 
     @Inject
     AudioListPresenter presenter;
@@ -45,12 +57,38 @@ public class AudioListActivity extends AppCompatActivity implements AudioListPre
         ButterKnife.bind(this);
         initToolbar();
         initRecyclerView();
-        presenter.onCreated();
+        AudioListActivityPermissionsDispatcher.requestMediaWithCheck(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        showProgress(false);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        AudioListActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
     @Override
     public void onTrackListReceived(List<Track> trackList) {
+        rvAudioList.scheduleLayoutAnimation();
         audioListAdapter.addData(trackList);
+    }
+
+    @Override
+    public void showProgress(boolean show) {
+        if (show)
+            progressBar.setVisibility(View.VISIBLE);
+        else
+            progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showError(String message) {
+
     }
 
     private void initToolbar() {
@@ -68,7 +106,20 @@ public class AudioListActivity extends AppCompatActivity implements AudioListPre
         rvAudioList.setLayoutManager(gridLayoutManager);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.margin_tiny);
         rvAudioList.addItemDecoration(new AudioColumnDecoration(spacingInPixels));
-        rvAudioList.scheduleLayoutAnimation();
+    }
+
+    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    void requestMedia() {
+        presenter.readMediaFromDevice();
+    }
+
+    @OnShowRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    void showRationaleForExternalStorage(final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.msg_request_storage_permission)
+                .setPositiveButton(R.string.btn_allow, (dialog, button) -> request.proceed())
+                .setNegativeButton(R.string.btn_deny, (dialog, button) -> request.cancel())
+                .show();
     }
 
 }

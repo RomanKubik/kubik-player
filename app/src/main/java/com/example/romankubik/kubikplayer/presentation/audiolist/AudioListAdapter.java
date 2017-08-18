@@ -1,5 +1,6 @@
 package com.example.romankubik.kubikplayer.presentation.audiolist;
 
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +66,8 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
         TextView tvSong;
         @BindView(R.id.tv_artist)
         TextView tvArtist;
+        @BindView(R.id.cl_holder)
+        ConstraintLayout clBackground;
 
         public AudioListHolder(View itemView) {
             super(itemView);
