@@ -47,7 +47,8 @@ public class AudioListActivity extends AppCompatActivity implements AudioListPre
     @Inject
     AudioListPresenter presenter;
 
-    private AudioListAdapter audioListAdapter;
+    @Inject
+    AudioListAdapter audioListAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,7 +100,6 @@ public class AudioListActivity extends AppCompatActivity implements AudioListPre
     }
 
     private void initRecyclerView() {
-        audioListAdapter = new AudioListAdapter();
         rvAudioList.setAdapter(audioListAdapter);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false);
         gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

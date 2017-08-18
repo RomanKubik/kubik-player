@@ -1,5 +1,6 @@
 package com.example.romankubik.kubikplayer.presentation.audiolist;
 
+import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +16,8 @@ import com.example.romankubik.kubikplayer.interaction.entity.Track;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -24,8 +27,11 @@ import butterknife.ButterKnife;
 
 public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.AudioListHolder> {
 
+    private Context context;
+
     private List<Track> trackList = new ArrayList<>();
 
+    @Inject
     public AudioListAdapter() {
     }
 
@@ -44,7 +50,8 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
 
     @Override
     public AudioListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
         return new AudioListHolder(inflater.inflate(R.layout.item_audio_list, parent, false));
     }
 
@@ -58,7 +65,7 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
         return trackList.size();
     }
 
-    static class AudioListHolder extends RecyclerView.ViewHolder {
+    class AudioListHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.iv_poster)
         ImageView ivPoster;
@@ -78,6 +85,13 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
             tvSong.setText(track.getSong());
             if (track.getArtist() != null) tvArtist.setText(track.getArtist());
             else tvArtist.setText(R.string.unknown);
+            if (track.getImage() != null) {
+                ivPoster.setImageBitmap(track.getImage());
+                tvSong.setTextColor(track.getSwatch().getTitleTextColor());
+                tvArtist.setTextColor(track.getSwatch().getTitleTextColor());
+                clBackground.setBackgroundColor(track.getSwatch().getRgb());
+            }
+            else ivPoster.setImageDrawable(context.getDrawable(R.drawable.ic_album_black_24dp));
         }
     }
 }
