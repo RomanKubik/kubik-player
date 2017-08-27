@@ -1,7 +1,11 @@
 package com.example.romankubik.kubikplayer.presentation.audiolist;
 
 import android.Manifest;
+import android.content.ContentResolver;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -9,14 +13,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.romankubik.kubikplayer.R;
 import com.example.romankubik.kubikplayer.general.widgets.AnimatedGridRecyclerView;
 import com.example.romankubik.kubikplayer.interaction.entity.Track;
 import com.example.romankubik.kubikplayer.presentation.audiolist.di.AudioListModule;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -75,6 +82,8 @@ public class AudioListActivity extends AppCompatActivity implements AudioListPre
 
     @Override
     public void onTrackListReceived(List<Track> trackList) {
+        Log.d("MyTag", "onTrackListReceived: " + Thread.currentThread().getName());
+
         rvAudioList.scheduleLayoutAnimation();
         audioListAdapter.addData(trackList);
     }
@@ -89,7 +98,7 @@ public class AudioListActivity extends AppCompatActivity implements AudioListPre
 
     @Override
     public void showError(String message) {
-
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     private void initToolbar() {
@@ -120,6 +129,33 @@ public class AudioListActivity extends AppCompatActivity implements AudioListPre
                 .setPositiveButton(R.string.btn_allow, (dialog, button) -> request.proceed())
                 .setNegativeButton(R.string.btn_deny, (dialog, button) -> request.cancel())
                 .show();
+    }
+
+    void aa() {
+        //Some audio may be explicitly marked as not being music
+        String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
+
+        String[] projection = {
+                MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.DISPLAY_NAME,
+                MediaStore.Audio.Media.DURATION
+        };
+
+        Cursor cursor = this.managedQuery(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                projection,
+                selection,
+                null,
+                null);
+
+        List<String> songs = new ArrayList<String>();
+        while(cursor.moveToNext()){
+            songs.add(cursor.getString(0) + "||" + cursor.getString(1) + "||" +   cursor.getString(2) + "||" +   cursor.getString(3) + "||" +  cursor.getString(4) + "||" +  cursor.getString(5));
+        }
+
     }
 
 }

@@ -10,6 +10,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by roman.kubik on 8/17/17.
@@ -39,12 +40,16 @@ public class AudioListPresenter {
         view.showProgress(true);
         interactor.finder()
                 .findAllMusicFiles()
+                .subscribeOn(Schedulers.io())
                 .map(MediaMapper::mapFileToTrack)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnComplete(() -> view.showProgress(false))
                 .toList()
                 .subscribe(l -> view.onTrackListReceived(l),
-                        e -> view.showError("Can't load music from music directory"));
+                        e -> {
+                            view.showError("Can't load music from music directory");
+                            e.printStackTrace();
+                        });
     }
 
 }

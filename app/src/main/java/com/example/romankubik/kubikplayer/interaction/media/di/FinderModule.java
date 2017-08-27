@@ -1,5 +1,7 @@
 package com.example.romankubik.kubikplayer.interaction.media.di;
 
+import android.content.Context;
+
 import com.example.romankubik.kubikplayer.interaction.Interactor;
 import com.example.romankubik.kubikplayer.interaction.media.MediaFinder;
 
@@ -19,16 +21,16 @@ public class FinderModule {
 
     @Singleton
     @Provides
-    public MediaFinder provideMediaFinder() {
+    public MediaFinder provideMediaFinder(Context context) {
         if (mediaFinder == null)
-            mediaFinder = new MediaFinder();
+            mediaFinder = new MediaFinder(context);
         return mediaFinder;
     }
 
     @Singleton
     @Provides
-    public Interactor.Finder providesFinder() {
-        return provideMediaFinder();
+    public Interactor.Finder providesFinder(Context context) {
+        return provideMediaFinder(context);
     }
 
 }

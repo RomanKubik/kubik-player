@@ -7,6 +7,7 @@ import com.example.romankubik.kubikplayer.interaction.entity.Track;
 import java.io.File;
 
 /**
+ * Map audio metadata to {@link Track}
  * Created by roman.kubik on 8/18/17.
  */
 
