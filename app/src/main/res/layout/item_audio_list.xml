@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1.5"
-        android:background="@color/colorPrimary"
+        android:background="@color/gray_light_dark"
         android:orientation="horizontal">
 
         <TextView
@@ -31,6 +31,7 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:text="Awesome artist"
+            android:textColor="@color/gray"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -44,6 +45,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginTop="16dp"
             android:text="Awesome song"
+            android:textColor="@color/gray"
             android:textSize="@dimen/font_x_medium"
             android:textStyle="bold"
             android:maxLines="1"
