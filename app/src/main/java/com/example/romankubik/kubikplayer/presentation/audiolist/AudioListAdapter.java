@@ -87,9 +87,9 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
             else tvArtist.setText(R.string.unknown);
             if (track.getImage() != null) {
                 ivPoster.setImageBitmap(track.getImage());
-                tvSong.setTextColor(track.getSwatch().getTitleTextColor());
-                tvArtist.setTextColor(track.getSwatch().getTitleTextColor());
-                clBackground.setBackgroundColor(track.getSwatch().getRgb());
+                tvSong.setTextColor(track.getTitleColor());
+                tvArtist.setTextColor(track.getTitleColor());
+                clBackground.setBackgroundColor(track.getPrimaryColor());
             }
             else ivPoster.setImageDrawable(context.getDrawable(R.drawable.ic_album_black_24dp));
         }

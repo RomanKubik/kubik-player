@@ -14,7 +14,8 @@ public class Track {
     private String song;
     private String album;
     private Bitmap image;
-    private Palette.Swatch swatch;
+    private int primaryColor;
+    private int titleColor;
 
     public String getArtist() {
         return artist;
@@ -47,12 +48,20 @@ public class Track {
     public void setImage(byte[] image) {
         if (image != null) {
             this.image = BitmapFactory.decodeByteArray(image, 0, image.length);
-            swatch = Palette.from(this.image).generate().getDominantSwatch();
+            Palette.Swatch swatch = Palette.from(this.image).generate().getDominantSwatch();
+            if (swatch != null) {
+                primaryColor = swatch.getRgb();
+                titleColor = swatch.getTitleTextColor();
+            }
         }
     }
 
-    public Palette.Swatch getSwatch() {
-        return swatch;
+    public int getPrimaryColor() {
+        return primaryColor;
+    }
+
+    public int getTitleColor() {
+        return titleColor;
     }
 
 }

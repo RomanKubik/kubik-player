@@ -1,13 +1,10 @@
 package com.example.romankubik.kubikplayer.interaction.media;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import com.example.romankubik.kubikplayer.interaction.Interactor;
 
@@ -18,8 +15,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.BehaviorSubject;
 
 /**
  * Finds music files on device
@@ -37,7 +32,32 @@ public class MediaFinder implements Interactor.Finder {
 
     @Override
     public Observable<File> findAllMusicFiles() {
-        return Observable.fromIterable(getMusicList());
+        return Observable.create(s -> {
+            ContentResolver cr = context.getContentResolver();
+
+            Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+            String selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0";
+            String sortOrder = MediaStore.Audio.Media.TITLE + " ASC";
+            Cursor cur = cr.query(uri, null, selection, null, sortOrder);
+
+            if(cur != null)
+            {
+                if(cur.getCount() > 0)
+                {
+                    while(cur.moveToNext())
+                    {
+                        String data = cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.DATA));
+                        File f = new File(data);
+                        if (f.length() != 0) {
+                            s.onNext(f);
+                        }
+                    }
+
+                }
+                cur.close();
+            }
+            s.onComplete();
+        });
     }
 
     private List<File> getListFiles(File parentDir) {
@@ -53,34 +73,6 @@ public class MediaFinder implements Interactor.Finder {
             }
         }
         return inFiles;
-    }
-
-    private List<File> getMusicList() {
-        ContentResolver cr = context.getContentResolver();
-
-        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        String selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0";
-        String sortOrder = MediaStore.Audio.Media.TITLE + " ASC";
-        Cursor cur = cr.query(uri, null, selection, null, sortOrder);
-
-        List<File> files = new ArrayList<>();
-
-        if(cur != null)
-        {
-            if(cur.getCount() > 0)
-            {
-                while(cur.moveToNext())
-                {
-                    String data = cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.DATA));
-                    files.add(new File(data));
-                }
-
-            }
-            cur.close();
-        }
-
-        Log.d("MyTag", "getMusicList: " + Thread.currentThread().getName());
-        return files;
     }
 
 }
