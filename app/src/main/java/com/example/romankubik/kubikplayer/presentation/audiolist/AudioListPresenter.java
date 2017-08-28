@@ -41,8 +41,8 @@ public class AudioListPresenter {
         interactor.finder()
                 .findAllMusicFiles()
                 .subscribeOn(Schedulers.io())
-                .map(MediaMapper::mapFileToTrack)
                 .observeOn(AndroidSchedulers.mainThread())
+                .map(MediaMapper::mapFileToTrack)
                 .doOnComplete(() -> view.showProgress(false))
                 .toList()
                 .subscribe(l -> view.onTrackListReceived(l),

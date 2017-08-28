@@ -15,7 +15,7 @@ import dagger.Provides;
  */
 
 @Module
-public class FinderModule {
+public class MediaModule {
 
     private MediaFinder mediaFinder;
 

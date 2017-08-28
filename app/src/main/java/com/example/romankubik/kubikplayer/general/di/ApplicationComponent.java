@@ -2,7 +2,7 @@ package com.example.romankubik.kubikplayer.general.di;
 
 import android.content.Context;
 
-import com.example.romankubik.kubikplayer.interaction.media.di.FinderModule;
+import com.example.romankubik.kubikplayer.interaction.media.di.MediaModule;
 import com.example.romankubik.kubikplayer.interaction.player.MusicPlayerService;
 import com.example.romankubik.kubikplayer.interaction.player.di.PlayerModule;
 import com.example.romankubik.kubikplayer.presentation.audiolist.di.AudioListComponent;
@@ -19,7 +19,7 @@ import dagger.Component;
  */
 
 @Singleton
-@Component(modules = {ApplicationModule.class, PlayerModule.class, FinderModule.class})
+@Component(modules = {ApplicationModule.class, PlayerModule.class, MediaModule.class})
 public interface ApplicationComponent {
     Context getApplicationContext();
 

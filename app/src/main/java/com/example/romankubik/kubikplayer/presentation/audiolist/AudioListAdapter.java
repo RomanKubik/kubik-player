@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -75,6 +76,8 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
         TextView tvArtist;
         @BindView(R.id.cl_holder)
         ConstraintLayout clBackground;
+        @BindView(R.id.iv_starred)
+        ImageView ivStarred;
 
         public AudioListHolder(View itemView) {
             super(itemView);
@@ -87,6 +90,7 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
             else tvArtist.setText(R.string.unknown);
             if (track.getImage() != null) {
                 ivPoster.setImageBitmap(track.getImage());
+                ivStarred.setColorFilter(track.getTitleColor());
                 tvSong.setTextColor(track.getTitleColor());
                 tvArtist.setTextColor(track.getTitleColor());
                 clBackground.setBackgroundColor(track.getPrimaryColor());
