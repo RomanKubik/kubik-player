@@ -4,18 +4,30 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.graphics.Palette;
 
+import org.parceler.Parcel;
+
 /**
  * Created by roman.kubik on 8/17/17.
  */
 
+@Parcel
 public class Track {
 
+    private String path;
     private String artist;
     private String song;
     private String album;
     private Bitmap image;
     private int primaryColor;
     private int titleColor;
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 
     public String getArtist() {
         return artist;

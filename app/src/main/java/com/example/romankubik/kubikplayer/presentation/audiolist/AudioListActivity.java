@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.romankubik.kubikplayer.R;
 import com.example.romankubik.kubikplayer.general.widgets.AnimatedGridRecyclerView;
 import com.example.romankubik.kubikplayer.interaction.entity.Track;
+import com.example.romankubik.kubikplayer.presentation.Navigate;
 import com.example.romankubik.kubikplayer.presentation.audiolist.di.AudioListModule;
 
 import java.util.List;
@@ -98,6 +99,7 @@ public class AudioListActivity extends AppCompatActivity implements AudioListPre
     }
 
     private void initRecyclerView() {
+        audioListAdapter.setOnItemClickListener(t -> Navigate.toPlayerActivity(this, t));
         rvAudioList.setAdapter(audioListAdapter);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false);
         rvAudioList.setLayoutManager(gridLayoutManager);

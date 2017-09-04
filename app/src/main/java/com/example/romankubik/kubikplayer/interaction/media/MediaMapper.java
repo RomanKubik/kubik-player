@@ -15,6 +15,7 @@ public class MediaMapper {
 
     public static Track mapFileToTrack(File file) {
         Track track = new Track();
+        track.setPath(file.getPath());
         MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
         metadataRetriever.setDataSource(file.getPath());
         if (metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE) != null)
