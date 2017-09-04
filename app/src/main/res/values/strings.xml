@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Kubik Player</string>
+    <string name="title_my_library">My Library</string>
+    <string name="msg_request_storage_permission">To listen your favourite music with Kubik Player you should give permissions</string>
+    <string name="btn_allow">Allow</string>
+    <string name="btn_deny">Deny</string>
+    <string name="msg_playlist_is_empty">Playlist is empty</string>
+    <string name="action_select_directory">Select directory</string>
+    <string name="unknown">Unknown</string>
 </resources>
