@@ -1,7 +1,5 @@
 package com.example.romankubik.kubikplayer.presentation.audiolist;
 
-import android.animation.ArgbEvaluator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.support.constraint.ConstraintLayout;
@@ -9,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -71,8 +68,6 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
 
     class AudioListHolder extends RecyclerView.ViewHolder {
 
-        static final int ANIMATION_DURATION = 1500;
-        static final float FACTOR = 7.0f;
         @BindView(R.id.iv_poster)
         ImageView ivPoster;
         @BindView(R.id.tv_song)
@@ -94,34 +89,12 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
             if (track.getArtist() != null) tvArtist.setText(track.getArtist());
             else tvArtist.setText(R.string.unknown);
             if (track.getImage() != null) {
-                prepareAnimation(
-                        context.getResources().getColor(R.color.gray_dark),
-                        track.getPrimaryColor(),
-                        a -> clBackground.setBackgroundColor((int) a.getAnimatedValue()))
-                        .start();
-
-                prepareAnimation(
-                        context.getResources().getColor(R.color.gray),
-                        track.getTitleColor(),
-                        a -> {
-                            ivStarred.setColorFilter((int) a.getAnimatedValue(), PorterDuff.Mode.MULTIPLY);
-                            tvSong.setTextColor((int) a.getAnimatedValue());
-                            tvArtist.setTextColor((int) a.getAnimatedValue());
-                        })
-                        .start();
+                clBackground.setBackgroundColor(track.getPrimaryColor());
+                ivStarred.setColorFilter(track.getTitleColor(), PorterDuff.Mode.MULTIPLY);
+                tvSong.setTextColor(track.getTitleColor());
+                tvArtist.setTextColor(track.getTitleColor());
                 ivPoster.setImageBitmap(track.getImage());
             } else ivPoster.setImageDrawable(context.getDrawable(R.drawable.ic_album_black_24dp));
-        }
-
-        private ValueAnimator prepareAnimation(int startColor, int endColor,
-                                               ValueAnimator.AnimatorUpdateListener updateListener) {
-            ValueAnimator valueAnimator
-                    = ValueAnimator.ofObject(new ArgbEvaluator(), startColor, endColor);
-            valueAnimator.setInterpolator(new DecelerateInterpolator(FACTOR));
-            valueAnimator.setStartDelay(ANIMATION_DURATION);
-            valueAnimator.setDuration(ANIMATION_DURATION);
-            valueAnimator.addUpdateListener(updateListener);
-            return valueAnimator;
         }
     }
 }
