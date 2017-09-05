@@ -2,9 +2,6 @@ package com.example.romankubik.kubikplayer.presentation.player;
 
 import com.example.romankubik.kubikplayer.interaction.Interactor;
 import com.example.romankubik.kubikplayer.interaction.entity.Track;
-import com.example.romankubik.kubikplayer.interaction.media.MediaMapper;
-
-import java.io.File;
 
 import javax.inject.Inject;
 
@@ -17,7 +14,6 @@ public class PlayerPresenter {
     private Track track;
 
     public interface View {
-        void onTrackReceived(Track track);
         void showError(String message);
     }
 
@@ -30,8 +26,7 @@ public class PlayerPresenter {
         this.interactor = interactor;
     }
 
-    public void setTrack(String trackPath) {
-        this.track = MediaMapper.mapFileToTrack(new File(trackPath));
-        view.onTrackReceived(track);
+    public void setTrack(Track track) {
+        this.track = track;
     }
 }

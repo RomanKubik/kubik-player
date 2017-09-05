@@ -17,9 +17,10 @@ public class Track {
     private String artist;
     private String song;
     private String album;
-    private Bitmap image;
+    private byte[] image;
     private int primaryColor;
-    private int titleColor;
+    private int secondaryColor;
+    private int bodyColor;
 
     public String getPath() {
         return path;
@@ -53,27 +54,35 @@ public class Track {
         this.album = album;
     }
 
-    public Bitmap getImage() {
+    public byte[] getImage() {
         return image;
     }
 
     public void setImage(byte[] image) {
         if (image != null) {
-            this.image = BitmapFactory.decodeByteArray(image, 0, image.length);
-            Palette.Swatch swatch = Palette.from(this.image).generate().getDominantSwatch();
+            this.image = image;
+            Palette.Swatch swatch = Palette.from(getBitmapImage()).generate().getDominantSwatch();
             if (swatch != null) {
                 primaryColor = swatch.getRgb();
-                titleColor = swatch.getTitleTextColor();
+                secondaryColor = swatch.getTitleTextColor();
+                bodyColor = swatch.getBodyTextColor();
             }
         }
+    }
+
+    public Bitmap getBitmapImage() {
+        return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
 
     public int getPrimaryColor() {
         return primaryColor;
     }
 
-    public int getTitleColor() {
-        return titleColor;
+    public int getSecondaryColor() {
+        return secondaryColor;
     }
 
+    public int getBodyColor() {
+        return bodyColor;
+    }
 }
