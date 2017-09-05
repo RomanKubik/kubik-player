@@ -4,20 +4,17 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.graphics.Palette;
 
-import org.parceler.Parcel;
-
 /**
  * Created by roman.kubik on 8/17/17.
  */
 
-@Parcel
 public class Track {
 
     private String path;
     private String artist;
     private String song;
     private String album;
-    private byte[] image;
+    private Bitmap image;
     private int primaryColor;
     private int secondaryColor;
     private int bodyColor;
@@ -54,24 +51,20 @@ public class Track {
         this.album = album;
     }
 
-    public byte[] getImage() {
+    public Bitmap getImage() {
         return image;
     }
 
     public void setImage(byte[] image) {
         if (image != null) {
-            this.image = image;
-            Palette.Swatch swatch = Palette.from(getBitmapImage()).generate().getDominantSwatch();
+            this.image = BitmapFactory.decodeByteArray(image, 0, image.length);
+            Palette.Swatch swatch = Palette.from(this.image).generate().getDominantSwatch();
             if (swatch != null) {
                 primaryColor = swatch.getRgb();
                 secondaryColor = swatch.getTitleTextColor();
                 bodyColor = swatch.getBodyTextColor();
             }
         }
-    }
-
-    public Bitmap getBitmapImage() {
-        return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
 
     public int getPrimaryColor() {

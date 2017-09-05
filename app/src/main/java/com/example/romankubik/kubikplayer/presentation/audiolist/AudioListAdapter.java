@@ -107,8 +107,14 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
                 ivStarred.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
                 tvSong.setTextColor(track.getSecondaryColor());
                 tvArtist.setTextColor(track.getSecondaryColor());
-                ivPoster.setImageBitmap(track.getBitmapImage());
-            } else ivPoster.setImageDrawable(context.getDrawable(R.drawable.ic_album_white_24dp));
+                ivPoster.setImageBitmap(track.getImage());
+            } else {
+                clBackground.setBackgroundColor(context.getResources().getColor(R.color.gray_light_dark));
+                ivStarred.setColorFilter(context.getResources().getColor(R.color.gray), PorterDuff.Mode.MULTIPLY);
+                tvSong.setTextColor(context.getResources().getColor(R.color.gray));
+                tvArtist.setTextColor(context.getResources().getColor(R.color.gray));
+                ivPoster.setImageDrawable(context.getDrawable(R.drawable.ic_album_gray_light_dark_24dp));
+            }
         }
 
         void setOnItemClickListener(View.OnClickListener onClickListener) {

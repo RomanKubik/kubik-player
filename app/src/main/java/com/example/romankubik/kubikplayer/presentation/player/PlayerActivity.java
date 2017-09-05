@@ -17,8 +17,6 @@ import com.example.romankubik.kubikplayer.general.Constants;
 import com.example.romankubik.kubikplayer.interaction.entity.Track;
 import com.example.romankubik.kubikplayer.presentation.player.di.PlayerModule;
 
-import org.parceler.Parcels;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -68,32 +66,34 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     }
 
     @Override
-    public void showError(String message) {
-
-    }
-
-    private void getExtras() {
-        Track track = Parcels.unwrap(getIntent().getParcelableExtra(Constants.Intent.TRACK_EXTRA));
-        playerPresenter.setTrack(track);
-        onTrackReceived(track);
-    }
-
-    private void onTrackReceived(Track track) {
+    public void onTrackReceived(Track track) {
         if (track.getArtist() != null) tvDetails.setText(track.getArtist() + " / "+ track.getSong());
         else tvDetails.setText(track.getSong());
         if (track.getImage() != null) {
             clNavigation.setBackgroundColor(track.getPrimaryColor());
             fabPlay.setBackgroundTintList(ColorStateList.valueOf(track.getPrimaryColor()));
-            tvDetails.setTextColor(track.getBodyColor());
-            ivLogo.setImageBitmap(track.getBitmapImage());
             tvDetails.setBackgroundColor(track.getSecondaryColor());
             ivPlayBack.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
             ivPlayForward.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
             ivPlayPause.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
             ivVolumeDown.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
             ivVolumeUp.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+            tvDetails.setTextColor(track.getBodyColor());
+            ivLogo.setImageBitmap(track.getImage());
         }
     }
+
+    @Override
+    public void showError(String message) {
+
+    }
+
+    private void getExtras() {
+        String trackPath = getIntent().getStringExtra(Constants.Intent.TRACK_EXTRA);
+        playerPresenter.setTrack(trackPath);
+    }
+
+
 
     private void initViews() {
 
