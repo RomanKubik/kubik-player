@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.annimon.stream.Optional;
-import com.annimon.stream.function.Consumer;
 import com.example.romankubik.kubikplayer.R;
 import com.example.romankubik.kubikplayer.interaction.entity.Track;
 
@@ -34,7 +33,7 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
 
     private List<Track> trackList = new ArrayList<>();
 
-    private Consumer<Track> onTrackClickListener;
+    private OnItemClickListener onTrackClickListener;
 
     @Inject
     public AudioListAdapter() {
@@ -65,7 +64,7 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
         holder.setItem(trackList.get(position));
         holder.setOnItemClickListener(v -> {
             if (onTrackClickListener != null)
-                onTrackClickListener.accept(trackList.get(holder.getAdapterPosition()));
+                onTrackClickListener.onItemClicked(holder, trackList.get(holder.getAdapterPosition()));
         });
     }
 
@@ -74,31 +73,31 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
         return trackList.size();
     }
 
-    public void setOnItemClickListener(Consumer<Track> onItemClickListener) {
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onTrackClickListener = onItemClickListener;
     }
 
-    class AudioListHolder extends RecyclerView.ViewHolder {
+    public class AudioListHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.ll_root)
-        LinearLayout llRoot;
+        public LinearLayout llRoot;
         @BindView(R.id.iv_poster)
-        ImageView ivPoster;
+        public ImageView ivPoster;
         @BindView(R.id.tv_song)
-        TextView tvSong;
+        public TextView tvSong;
         @BindView(R.id.tv_artist)
-        TextView tvArtist;
+        public TextView tvArtist;
         @BindView(R.id.cl_holder)
-        ConstraintLayout clBackground;
+        public ConstraintLayout clBackground;
         @BindView(R.id.iv_starred)
-        ImageView ivStarred;
+        public ImageView ivStarred;
 
-        public AudioListHolder(View itemView) {
+        private AudioListHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
-        void setItem(Track track) {
+        private void setItem(Track track) {
             tvSong.setText(track.getSong());
             if (track.getArtist() != null) tvArtist.setText(track.getArtist());
             else tvArtist.setText(R.string.unknown);
@@ -117,8 +116,12 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
             }
         }
 
-        void setOnItemClickListener(View.OnClickListener onClickListener) {
+        private void setOnItemClickListener(View.OnClickListener onClickListener) {
             llRoot.setOnClickListener(onClickListener);
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClicked(AudioListHolder itemHolder, Track track);
     }
 }
