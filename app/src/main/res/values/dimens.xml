@@ -35,5 +35,6 @@
     <dimen name="img_click">36dp</dimen>
     <dimen name="img_medium">40dp</dimen>
     <dimen name="img_large">60dp</dimen>
+    <dimen name="fab_size">56dp</dimen>
 
 </resources>

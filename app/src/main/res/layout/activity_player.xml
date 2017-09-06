@@ -30,7 +30,7 @@
         app:layout_constraintRight_toRightOf="parent">
 
         <ProgressBar
-            android:id="@+id/pb_music"
+            android:id="@+id/sb_music"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="0dp"
             android:layout_height="24dp"
@@ -51,7 +51,7 @@
             android:padding="@dimen/margin_x_small"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pb_music"
+            app:layout_constraintTop_toBottomOf="@+id/sb_music"
             app:srcCompat="@drawable/ic_pause_white_24dp" />
 
         <ImageView
