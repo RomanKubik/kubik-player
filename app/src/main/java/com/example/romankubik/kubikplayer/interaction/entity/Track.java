@@ -58,11 +58,15 @@ public class Track {
     public void setImage(byte[] image) {
         if (image != null) {
             this.image = BitmapFactory.decodeByteArray(image, 0, image.length);
-            Palette.Swatch swatch = Palette.from(this.image).generate().getDominantSwatch();
-            if (swatch != null) {
-                primaryColor = swatch.getRgb();
-                secondaryColor = swatch.getTitleTextColor();
-                bodyColor = swatch.getBodyTextColor();
+            Palette palette = Palette.from(this.image).generate();
+            if (palette.getVibrantSwatch() != null) {
+                primaryColor = palette.getVibrantSwatch().getRgb();
+                secondaryColor = palette.getLightVibrantSwatch().getRgb();
+                bodyColor = palette.getDarkVibrantSwatch().getRgb();
+            } else {
+                primaryColor = palette.getMutedSwatch().getRgb();
+                secondaryColor = palette.getLightMutedSwatch().getRgb();
+                bodyColor = palette.getDarkMutedSwatch().getRgb();
             }
         }
     }

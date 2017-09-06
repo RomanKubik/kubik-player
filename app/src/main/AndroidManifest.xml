@@ -28,7 +28,7 @@
         <activity android:name=".presentation.audiolist.AudioListActivity" />
 
         <activity android:name=".presentation.player.PlayerActivity"
-            android:theme="@style/AppTheme.Player"/>
+            android:theme="@style/AppTheme.Player" />
 
         <activity android:name=".presentation.main.MainActivity" />
     </application>

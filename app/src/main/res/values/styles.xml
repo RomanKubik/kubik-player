@@ -19,7 +19,7 @@
     <style name="AppTheme.Player" parent="AppTheme">
         <item name="android:windowSharedElementEnterTransition">@transition/expansion</item>
         <item name="android:windowSharedElementExitTransition">@transition/expansion</item>
-
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
 </resources>

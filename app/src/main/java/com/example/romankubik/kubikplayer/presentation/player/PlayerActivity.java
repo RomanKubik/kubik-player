@@ -52,6 +52,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     ImageView ivVolumeUp;
     @BindView(R.id.fab_play)
     FloatingActionButton fabPlay;
+    @BindView(R.id.cl_details)
+    ConstraintLayout clDetails;
+    @BindView(R.id.tv_artist)
+    TextView tvArtist;
+    @BindView(R.id.tv_song)
+    TextView tvSong;
 
     @Inject
     PlayerPresenter playerPresenter;
@@ -70,6 +76,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
         if (track.getArtist() != null) tvDetails.setText(track.getArtist() + " / "+ track.getSong());
         else tvDetails.setText(track.getSong());
         if (track.getImage() != null) {
+            getWindow().setStatusBarColor(track.getPrimaryColor());
+            clDetails.setBackgroundColor(track.getSecondaryColor());
             clNavigation.setBackgroundColor(track.getPrimaryColor());
             fabPlay.setBackgroundTintList(ColorStateList.valueOf(track.getPrimaryColor()));
             tvDetails.setBackgroundColor(track.getSecondaryColor());

@@ -10,10 +10,6 @@
         android:id="@+id/iv_logo"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="0dp"
         android:scaleType="centerCrop"
         android:transitionName="posterTransition"
         app:layout_constraintBottom_toTopOf="@+id/cl_navigation"
@@ -28,8 +24,6 @@
         android:id="@+id/cl_navigation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
-        android:transitionName="containerTransition"
         app:layout_constraintBottom_toTopOf="@+id/tv_details"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -39,8 +33,7 @@
             android:id="@+id/pb_music"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="0dp"
-            android:layout_height="@dimen/img_icon"
-            android:layout_marginTop="0dp"
+            android:layout_height="24dp"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -48,8 +41,8 @@
 
         <ImageView
             android:id="@+id/iv_play_pause"
-            android:layout_width="@dimen/img_medium"
-            android:layout_height="@dimen/img_medium"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
@@ -63,8 +56,8 @@
 
         <ImageView
             android:id="@+id/iv_play_back"
-            android:layout_width="@dimen/img_medium"
-            android:layout_height="@dimen/img_medium"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
@@ -80,8 +73,8 @@
 
         <ImageView
             android:id="@+id/iv_play_forward"
-            android:layout_width="@dimen/img_medium"
-            android:layout_height="@dimen/img_medium"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
@@ -97,8 +90,8 @@
 
         <ImageView
             android:id="@+id/iv_volume_down"
-            android:layout_width="@dimen/img_medium"
-            android:layout_height="@dimen/img_medium"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:padding="@dimen/margin_x_small"
             app:layout_constraintBottom_toBottomOf="@+id/sb_volume"
             app:layout_constraintHorizontal_bias="0.0"
@@ -109,8 +102,8 @@
 
         <ImageView
             android:id="@+id/iv_volume_up"
-            android:layout_width="@dimen/img_medium"
-            android:layout_height="@dimen/img_medium"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:padding="@dimen/margin_x_small"
             app:layout_constraintBottom_toBottomOf="@+id/sb_volume"
             app:layout_constraintHorizontal_bias="0.0"
@@ -135,14 +128,62 @@
             app:layout_constraintTop_toBottomOf="@+id/iv_play_pause" />
     </android.support.constraint.ConstraintLayout>
 
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_details"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:background="@color/gray_dark"
+        android:transitionName="containerTransition"
+        app:layout_constraintBottom_toTopOf="@+id/tv_details"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cl_navigation">
+
+        <TextView
+            android:id="@+id/tv_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Awesome artist"
+            android:textColor="@color/gray_light"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.4" />
+
+        <TextView
+            android:id="@+id/tv_song"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="8dp"
+            android:text="Awesome song"
+            android:textColor="@color/gray_light"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_artist"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.6" />
+    </android.support.constraint.ConstraintLayout>
+
     <TextView
         android:id="@+id/tv_details"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:padding="@dimen/margin_xxx_medium"
         android:text="TextView"
+        android:textColor="@color/gray_light"
         android:textSize="@dimen/font_medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -153,10 +194,8 @@
         android:id="@+id/fab_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
-        android:layout_marginTop="0dp"
         android:clickable="true"
         app:fabSize="auto"
         app:layout_constraintBottom_toTopOf="@+id/cl_navigation"
