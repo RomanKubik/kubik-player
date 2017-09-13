@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.annimon.stream.Optional;
@@ -31,6 +32,8 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
     private Context context;
 
     private List<Track> trackList = new ArrayList<>();
+
+    private OnItemClickListener onTrackClickListener;
 
     @Inject
     public AudioListAdapter() {
@@ -59,6 +62,10 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
     @Override
     public void onBindViewHolder(AudioListHolder holder, int position) {
         holder.setItem(trackList.get(position));
+        holder.setOnItemClickListener(v -> {
+            if (onTrackClickListener != null)
+                onTrackClickListener.onItemClicked(holder, trackList.get(holder.getAdapterPosition()));
+        });
     }
 
     @Override
@@ -66,35 +73,55 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
         return trackList.size();
     }
 
-    class AudioListHolder extends RecyclerView.ViewHolder {
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onTrackClickListener = onItemClickListener;
+    }
 
+    public class AudioListHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.ll_root)
+        public LinearLayout llRoot;
         @BindView(R.id.iv_poster)
-        ImageView ivPoster;
+        public ImageView ivPoster;
         @BindView(R.id.tv_song)
-        TextView tvSong;
+        public TextView tvSong;
         @BindView(R.id.tv_artist)
-        TextView tvArtist;
+        public TextView tvArtist;
         @BindView(R.id.cl_holder)
-        ConstraintLayout clBackground;
+        public ConstraintLayout clBackground;
         @BindView(R.id.iv_starred)
-        ImageView ivStarred;
+        public ImageView ivStarred;
 
-        public AudioListHolder(View itemView) {
+        private AudioListHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
-        void setItem(Track track) {
+        private void setItem(Track track) {
             tvSong.setText(track.getSong());
             if (track.getArtist() != null) tvArtist.setText(track.getArtist());
             else tvArtist.setText(R.string.unknown);
             if (track.getImage() != null) {
                 clBackground.setBackgroundColor(track.getPrimaryColor());
-                ivStarred.setColorFilter(track.getTitleColor(), PorterDuff.Mode.MULTIPLY);
-                tvSong.setTextColor(track.getTitleColor());
-                tvArtist.setTextColor(track.getTitleColor());
+                ivStarred.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+                tvSong.setTextColor(track.getSecondaryColor());
+                tvArtist.setTextColor(track.getSecondaryColor());
                 ivPoster.setImageBitmap(track.getImage());
-            } else ivPoster.setImageDrawable(context.getDrawable(R.drawable.ic_album_black_24dp));
+            } else {
+                clBackground.setBackgroundColor(context.getResources().getColor(R.color.gray_light_dark));
+                ivStarred.setColorFilter(context.getResources().getColor(R.color.gray), PorterDuff.Mode.MULTIPLY);
+                tvSong.setTextColor(context.getResources().getColor(R.color.gray));
+                tvArtist.setTextColor(context.getResources().getColor(R.color.gray));
+                ivPoster.setImageDrawable(context.getDrawable(R.drawable.ic_album_gray_light_dark_24dp));
+            }
         }
+
+        private void setOnItemClickListener(View.OnClickListener onClickListener) {
+            llRoot.setOnClickListener(onClickListener);
+        }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClicked(AudioListHolder itemHolder, Track track);
     }
 }

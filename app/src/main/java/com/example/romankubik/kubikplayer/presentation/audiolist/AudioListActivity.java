@@ -4,6 +4,7 @@ import android.Manifest;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.example.romankubik.kubikplayer.R;
 import com.example.romankubik.kubikplayer.general.widgets.AnimatedGridRecyclerView;
 import com.example.romankubik.kubikplayer.interaction.entity.Track;
+import com.example.romankubik.kubikplayer.presentation.Navigate;
 import com.example.romankubik.kubikplayer.presentation.audiolist.di.AudioListModule;
 
 import java.util.List;
@@ -98,6 +100,11 @@ public class AudioListActivity extends AppCompatActivity implements AudioListPre
     }
 
     private void initRecyclerView() {
+        audioListAdapter.setOnItemClickListener((h, t) -> {
+            Pair<View, String> p1 = Pair.create(h.ivPoster, "posterTransition");
+            Pair<View, String> p2 = Pair.create(h.clBackground, "containerTransition");
+            Navigate.toPlayerActivity(this, t, p1, p2);
+        });
         rvAudioList.setAdapter(audioListAdapter);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false);
         rvAudioList.setLayoutManager(gridLayoutManager);

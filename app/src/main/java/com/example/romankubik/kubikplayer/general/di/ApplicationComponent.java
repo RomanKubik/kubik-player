@@ -7,6 +7,7 @@ import com.example.romankubik.kubikplayer.interaction.player.MusicPlayerService;
 import com.example.romankubik.kubikplayer.interaction.player.di.PlayerModule;
 import com.example.romankubik.kubikplayer.presentation.audiolist.di.AudioListComponent;
 import com.example.romankubik.kubikplayer.presentation.audiolist.di.AudioListModule;
+import com.example.romankubik.kubikplayer.presentation.player.di.PlayerComponent;
 import com.example.romankubik.kubikplayer.presentation.template.di.TemplateComponent;
 import com.example.romankubik.kubikplayer.presentation.template.di.TemplateModule;
 
@@ -26,6 +27,8 @@ public interface ApplicationComponent {
     void inject(MusicPlayerService service);
 
     AudioListComponent audioListComponent(AudioListModule audioListModule);
+
+    PlayerComponent playerComponent(com.example.romankubik.kubikplayer.presentation.player.di.PlayerModule playerModule);
 
     TemplateComponent templateComponent(TemplateModule templateModule);
 }

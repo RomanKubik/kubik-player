@@ -10,12 +10,22 @@ import android.support.v7.graphics.Palette;
 
 public class Track {
 
+    private String path;
     private String artist;
     private String song;
     private String album;
     private Bitmap image;
     private int primaryColor;
-    private int titleColor;
+    private int secondaryColor;
+    private int bodyColor;
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 
     public String getArtist() {
         return artist;
@@ -48,10 +58,15 @@ public class Track {
     public void setImage(byte[] image) {
         if (image != null) {
             this.image = BitmapFactory.decodeByteArray(image, 0, image.length);
-            Palette.Swatch swatch = Palette.from(this.image).generate().getDominantSwatch();
-            if (swatch != null) {
-                primaryColor = swatch.getRgb();
-                titleColor = swatch.getTitleTextColor();
+            Palette palette = Palette.from(this.image).generate();
+            if (palette.getVibrantSwatch() != null) {
+                primaryColor = palette.getVibrantSwatch().getRgb();
+                secondaryColor = palette.getLightVibrantSwatch().getRgb();
+                bodyColor = palette.getDarkVibrantSwatch().getRgb();
+            } else {
+                primaryColor = palette.getMutedSwatch().getRgb();
+                secondaryColor = palette.getLightMutedSwatch().getRgb();
+                bodyColor = palette.getDarkMutedSwatch().getRgb();
             }
         }
     }
@@ -60,8 +75,11 @@ public class Track {
         return primaryColor;
     }
 
-    public int getTitleColor() {
-        return titleColor;
+    public int getSecondaryColor() {
+        return secondaryColor;
     }
 
+    public int getBodyColor() {
+        return bodyColor;
+    }
 }

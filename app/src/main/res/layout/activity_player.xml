@@ -1,0 +1,226 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="0dp"
+        android:scaleType="centerCrop"
+        android:transitionName="posterTransition"
+        app:layout_constraintBottom_toTopOf="@+id/cl_details"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_album_gray_light_dark_24dp"
+        app:layout_constraintLeft_toLeftOf="@+id/fab_holder"
+        app:layout_constraintRight_toRightOf="@+id/fab_holder"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_details"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/gray_dark"
+        android:padding="@dimen/margin_large_x"
+        android:transitionName="containerTransition"
+        app:layout_constraintBottom_toTopOf="@+id/tv_details"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fab_holder">
+
+        <TextView
+            android:id="@+id/tv_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:text="Awesome artist"
+            android:textColor="@color/gray_light"
+            android:textSize="@dimen/font_large"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_song"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Awesome song"
+            android:textColor="@color/gray_light"
+            android:textSize="@dimen/font_medium"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_artist"
+            app:layout_constraintTop_toBottomOf="@+id/tv_artist" />
+    </android.support.constraint.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/fab_holder"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/tv_details"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/cl_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:scaleX="0"
+            android:scaleY="0"
+            app:layout_constraintBottom_toTopOf="@+id/tv_details"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/fab_holder">
+
+            <SeekBar
+                android:id="@+id/sb_music"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_play_pause"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="32dp"
+                android:padding="@dimen/margin_x_small"
+                android:scaleX="0"
+                android:scaleY="0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sb_music"
+                app:srcCompat="@drawable/ic_pause_white_24dp" />
+
+            <ImageView
+                android:id="@+id/iv_play_back"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:padding="@dimen/margin_x_small"
+                android:scaleX="0"
+                android:scaleY="0"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_play_pause"
+                app:layout_constraintHorizontal_bias="0.35"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/iv_play_pause"
+                app:layout_constraintTop_toTopOf="@+id/iv_play_pause"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/ic_fast_rewind_white_24dp" />
+
+            <ImageView
+                android:id="@+id/iv_play_forward"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:padding="@dimen/margin_x_small"
+                android:scaleX="0"
+                android:scaleY="0"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_play_pause"
+                app:layout_constraintHorizontal_bias="0.65"
+                app:layout_constraintLeft_toRightOf="@+id/iv_play_pause"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/iv_play_pause"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/ic_fast_forward_white_24dp" />
+
+            <ImageView
+                android:id="@+id/iv_volume_down"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="@dimen/margin_x_small"
+                android:scaleX="0"
+                android:scaleY="0"
+                app:layout_constraintBottom_toBottomOf="@+id/sb_volume"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="@+id/iv_play_back"
+                app:layout_constraintRight_toRightOf="@+id/iv_play_back"
+                app:layout_constraintTop_toTopOf="@+id/sb_volume"
+                app:srcCompat="@drawable/ic_volume_mute_white_24dp" />
+
+            <ImageView
+                android:id="@+id/iv_volume_up"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="@dimen/margin_x_small"
+                android:scaleX="0"
+                android:scaleY="0"
+                app:layout_constraintBottom_toBottomOf="@+id/sb_volume"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="@+id/iv_play_forward"
+                app:layout_constraintRight_toRightOf="@+id/iv_play_forward"
+                app:layout_constraintTop_toTopOf="@+id/sb_volume"
+                app:srcCompat="@drawable/ic_volume_up_white_24dp" />
+
+            <SeekBar
+                android:id="@+id/sb_volume"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp"
+                android:scaleX="0"
+                android:scaleY="0"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/iv_volume_down"
+                app:layout_constraintRight_toLeftOf="@+id/iv_volume_up"
+                app:layout_constraintTop_toBottomOf="@+id/iv_play_pause" />
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_marginRight="@dimen/fab_margin"
+            android:clickable="true"
+            android:scaleX="0"
+            android:scaleY="0"
+            app:fabSize="auto"
+            app:layout_constraintBottom_toTopOf="@+id/cl_navigation"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cl_navigation"
+            app:srcCompat="@drawable/ic_play_arrow_white_24dp" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_details"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:padding="@dimen/margin_xxx_medium"
+        android:text="TextView"
+        android:textColor="@color/gray_dark"
+        android:textSize="@dimen/font_x_medium"
+        android:background="@color/gray_light"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</android.support.constraint.ConstraintLayout>
