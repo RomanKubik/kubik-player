@@ -2,17 +2,23 @@ package com.example.romankubik.kubikplayer.presentation.player;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Transition;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -39,6 +45,13 @@ import static com.example.romankubik.kubikplayer.general.android.PlayerApplicati
  */
 
 public class PlayerActivity extends AppCompatActivity implements PlayerPresenter.View {
+
+    public static final float MATERIAL_INTERPOLATOR_FACTOR = 7f;
+    public final static float SCALE_FACTOR = 6f;
+    public final static int ANIMATION_DURATION = 600;
+    public final static int SHORTER_ANIMATION_DURATION = ANIMATION_DURATION / 4;
+    public static final float NORMAL_SCALE = 1f;
+    public static final float ZERO_SCALE = 0f;
 
     @BindView(R.id.sb_volume)
     SeekBar sbVolume;
@@ -74,9 +87,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     @Inject
     PlayerPresenter playerPresenter;
 
-    public final static float SCALE_FACTOR = 6f;
-    public final static int ANIMATION_DURATION = 600;
-
     private boolean mRevealFlag;
     private float mFabSize;
 
@@ -89,6 +99,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
         component.playerComponent(new PlayerModule(this)).inject(this);
         ButterKnife.bind(this);
         getExtras();
+        addTransitionListener();
     }
 
     @Override
@@ -101,6 +112,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
             getWindow().setStatusBarColor(track.getPrimaryColor());
             clDetails.setBackgroundColor(track.getSecondaryColor());
             clNavigation.setBackgroundColor(track.getPrimaryColor());
+            Drawable fabImage = getDrawable(R.drawable.ic_play_arrow_white_24dp);
+            fabImage.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+            fabPlay.setImageDrawable(fabImage);
             fabPlay.setBackgroundTintList(ColorStateList.valueOf(track.getPrimaryColor()));
             ivPlayBack.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
             ivPlayForward.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
@@ -119,6 +133,130 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     private void getExtras() {
         String trackPath = getIntent().getStringExtra(Constants.Intent.TRACK_EXTRA);
         playerPresenter.setTrack(trackPath);
+    }
+
+    private void addTransitionListener() {
+        getWindow().getSharedElementEnterTransition().addListener(new Transition.TransitionListener() {
+            @Override
+            public void onTransitionStart(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                showFab();
+            }
+
+            @Override
+            public void onTransitionCancel(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionPause(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionResume(Transition transition) {
+
+            }
+        });
+    }
+
+
+    private void showFab() {
+        fabPlay.animate()
+                .scaleXBy(NORMAL_SCALE)
+                .scaleYBy(NORMAL_SCALE)
+                .setDuration(ANIMATION_DURATION / 2)
+                .start();
+    }
+
+    private void animateViewsOnFab() {
+        fabPlay.animate()
+                .scaleXBy(SCALE_FACTOR)
+                .scaleYBy(SCALE_FACTOR)
+                .setInterpolator(new AccelerateInterpolator(MATERIAL_INTERPOLATOR_FACTOR))
+                .setListener(mEndRevealListener)
+                .setDuration(ANIMATION_DURATION);
+
+        tvArtist.animate()
+                .alpha(0)
+                .setDuration(ANIMATION_DURATION)
+                .start();
+
+        tvSong.animate()
+                .alpha(0)
+                .setDuration(ANIMATION_DURATION)
+                .start();
+
+        int colorFrom = Color.WHITE;
+        int colorTo = track.getSecondaryColor();
+        ValueAnimator backgroundAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+        backgroundAnimator.setDuration(ANIMATION_DURATION);
+        backgroundAnimator.setInterpolator(new AccelerateInterpolator(MATERIAL_INTERPOLATOR_FACTOR));
+        backgroundAnimator.addUpdateListener(animator
+                -> tvDetails.setBackgroundColor((int) animator.getAnimatedValue()));
+
+        colorFrom = tvDetails.getCurrentTextColor();
+        colorTo = track.getBodyColor();
+        ValueAnimator textAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+        textAnimator.setDuration(ANIMATION_DURATION);
+        textAnimator.setInterpolator(new AccelerateInterpolator(MATERIAL_INTERPOLATOR_FACTOR));
+        textAnimator.addUpdateListener(animator
+                -> tvDetails.setBackgroundColor((int) animator.getAnimatedValue()));
+
+        textAnimator.start();
+        backgroundAnimator.start();
+    }
+
+    private AnimatorListenerAdapter mEndRevealListener = new AnimatorListenerAdapter() {
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            super.onAnimationEnd(animation);
+
+            fabPlay.setVisibility(View.INVISIBLE);
+            fabPlay.setScaleX(ZERO_SCALE);
+            fabPlay.setScaleY(ZERO_SCALE);
+            clDetails.setVisibility(View.INVISIBLE);
+            clNavigation.setBackgroundColor(track.getPrimaryColor());
+
+            clNavigation.setScaleX(NORMAL_SCALE);
+            clNavigation.setScaleY(NORMAL_SCALE);
+
+            tvDetails.setBackgroundColor(track.getSecondaryColor());
+            tvDetails.setTextColor(track.getBodyColor());
+
+            for (int i = 0; i < clNavigation.getChildCount(); i++) {
+                View v = clNavigation.getChildAt(i);
+                ViewPropertyAnimator animator = v.animate()
+                        .setInterpolator(new DecelerateInterpolator(MATERIAL_INTERPOLATOR_FACTOR))
+                        .scaleX(1)
+                        .scaleY(1)
+                        .setDuration(SHORTER_ANIMATION_DURATION);
+
+                animator.setStartDelay(i * 25);
+                animator.start();
+            }
+        }
+    };
+
+    /**
+     * We need this setter to translate between the information the animator
+     * produces (a new "PathPoint" describing the current animated location)
+     * and the information that the button requires (an xy location). The
+     * setter will be called by the ObjectAnimator given the 'fabLoc'
+     * property string.
+     */
+    public void setFabLoc(PathPoint newLoc) {
+        fabPlay.setTranslationX(newLoc.mX);
+
+        if (mRevealFlag)
+            fabPlay.setTranslationY(newLoc.mY - (mFabSize / 2));
+        else
+            fabPlay.setTranslationY(newLoc.mY);
     }
 
     @OnClick(R.id.fab_play)
@@ -143,67 +281,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
         anim.addUpdateListener(animation -> {
             if (Math.abs(sX - fabPlay.getY()) > mFabSize) ivLogo.bringToFront();
             if (!mRevealFlag) {
-                fabPlay.animate()
-                        .scaleXBy(SCALE_FACTOR)
-                        .scaleYBy(SCALE_FACTOR)
-                        .setInterpolator(new AccelerateInterpolator(5f))
-                        .setListener(mEndRevealListener)
-                        .setDuration(ANIMATION_DURATION);
-                tvArtist.animate()
-                        .alpha(0)
-                        .setDuration(ANIMATION_DURATION)
-                        .start();
-                tvSong.animate()
-                        .alpha(0)
-                        .setDuration(ANIMATION_DURATION)
-                        .start();
+                animateViewsOnFab();
                 mRevealFlag = true;
             }
         });
-    }
-
-    private AnimatorListenerAdapter mEndRevealListener = new AnimatorListenerAdapter() {
-
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            super.onAnimationEnd(animation);
-
-            fabPlay.setVisibility(View.INVISIBLE);
-            fabPlay.setScaleX(0);
-            fabPlay.setScaleY(0);
-            clDetails.setVisibility(View.INVISIBLE);
-            clNavigation.setBackgroundColor(track.getPrimaryColor());
-
-            clNavigation.setScaleX(1);
-            clNavigation.setScaleY(1);
-
-            for (int i = 0; i < clNavigation.getChildCount(); i++) {
-                View v = clNavigation.getChildAt(i);
-                ViewPropertyAnimator animator = v.animate()
-                        .scaleX(1)
-                        .scaleY(1)
-                        .setDuration(ANIMATION_DURATION);
-
-                animator.setStartDelay(i * 50);
-                animator.start();
-            }
-        }
-    };
-
-    /**
-     * We need this setter to translate between the information the animator
-     * produces (a new "PathPoint" describing the current animated location)
-     * and the information that the button requires (an xy location). The
-     * setter will be called by the ObjectAnimator given the 'fabLoc'
-     * property string.
-     */
-    public void setFabLoc(PathPoint newLoc) {
-        fabPlay.setTranslationX(newLoc.mX);
-
-        if (mRevealFlag)
-            fabPlay.setTranslationY(newLoc.mY - (mFabSize / 2));
-        else
-            fabPlay.setTranslationY(newLoc.mY);
     }
 
 }
