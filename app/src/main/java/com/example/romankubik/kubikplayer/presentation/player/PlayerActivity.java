@@ -3,7 +3,6 @@ package com.example.romankubik.kubikplayer.presentation.player;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -69,9 +68,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     TextView tvArtist;
     @BindView(R.id.tv_song)
     TextView tvSong;
-
-    //    @BindView(R.id.fab)
-//    View fab;
     @BindView(R.id.fab_holder)
     FrameLayout flFabContainer;
 
@@ -80,7 +76,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
 
     public final static float SCALE_FACTOR = 6f;
     public final static int ANIMATION_DURATION = 600;
-    public final static int MINIMUM_X_DISTANCE  = 200;
 
     private boolean mRevealFlag;
     private float mFabSize;
@@ -90,31 +85,28 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_design_player);
+        setContentView(R.layout.activity_player);
         component.playerComponent(new PlayerModule(this)).inject(this);
         ButterKnife.bind(this);
         getExtras();
-        mFabSize = getResources().getDimensionPixelSize(R.dimen.fab_size);
     }
 
     @Override
     public void onTrackReceived(Track track) {
         this.track = track;
-        if (track.getArtist() != null)
-            tvDetails.setText(track.getArtist() + " / " + track.getSong());
-        else tvDetails.setText(track.getSong());
+        tvDetails.setText(track.getSong());
+        tvSong.setText(track.getAlbum());
+        tvArtist.setText(track.getArtist());
         if (track.getImage() != null) {
             getWindow().setStatusBarColor(track.getPrimaryColor());
             clDetails.setBackgroundColor(track.getSecondaryColor());
             clNavigation.setBackgroundColor(track.getPrimaryColor());
             fabPlay.setBackgroundTintList(ColorStateList.valueOf(track.getPrimaryColor()));
-            tvDetails.setBackgroundColor(track.getSecondaryColor());
             ivPlayBack.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
             ivPlayForward.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
             ivPlayPause.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
             ivVolumeDown.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
             ivVolumeUp.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-            tvDetails.setTextColor(track.getBodyColor());
             ivLogo.setImageBitmap(track.getImage());
         }
     }
@@ -131,15 +123,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
 
     @OnClick(R.id.fab_play)
     public void onFabPressed() {
+        mFabSize = getResources().getDimensionPixelSize(R.dimen.fab_size);
         AnimatorPath path = new AnimatorPath();
-//        int loc[] = new int[2];
-//        ivPlayPause.getLocationOnScreen(loc);
-//        float startX = fabPlay.getTranslationX();
-//        float startY = fabPlay.getTranslationY() + (mFabSize / 2);
-//        float endX = -loc[0] + (mFabSize / 2);
-//        float endY = loc[1] - fabPlay.getY() + (mFabSize / 2);
-//        path.moveTo(startX, startY);
-//        path.curveTo(startX, startY, startX, endY, endX, endY);
         float sX = fabPlay.getY();
         float startX = fabPlay.getTranslationX();
         float startY = fabPlay.getTranslationY() + (mFabSize / 2);
@@ -155,21 +140,25 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
         anim.setDuration(ANIMATION_DURATION);
         anim.start();
 
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                if (Math.abs(sX - fabPlay.getY()) > mFabSize) ivLogo.bringToFront();
-                if (!mRevealFlag) {
-                        fabPlay.animate()
-                                .scaleXBy(SCALE_FACTOR)
-                                .scaleYBy(SCALE_FACTOR)
-                                .setInterpolator(new AccelerateInterpolator(5f))
-                                .setListener(mEndRevealListener)
-                                .setDuration(ANIMATION_DURATION);
-                        mRevealFlag = true;
-                    }
-                }
+        anim.addUpdateListener(animation -> {
+            if (Math.abs(sX - fabPlay.getY()) > mFabSize) ivLogo.bringToFront();
+            if (!mRevealFlag) {
+                fabPlay.animate()
+                        .scaleXBy(SCALE_FACTOR)
+                        .scaleYBy(SCALE_FACTOR)
+                        .setInterpolator(new AccelerateInterpolator(5f))
+                        .setListener(mEndRevealListener)
+                        .setDuration(ANIMATION_DURATION);
+                tvArtist.animate()
+                        .alpha(0)
+                        .setDuration(ANIMATION_DURATION)
+                        .start();
+                tvSong.animate()
+                        .alpha(0)
+                        .setDuration(ANIMATION_DURATION)
+                        .start();
+                mRevealFlag = true;
+            }
         });
     }
 
@@ -180,15 +169,13 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
             super.onAnimationEnd(animation);
 
             fabPlay.setVisibility(View.INVISIBLE);
+            fabPlay.setScaleX(0);
+            fabPlay.setScaleY(0);
             clDetails.setVisibility(View.INVISIBLE);
             clNavigation.setBackgroundColor(track.getPrimaryColor());
 
             clNavigation.setScaleX(1);
             clNavigation.setScaleY(1);
-//            clNavigation.animate()
-//                    .scaleX(1)
-//                    .scaleY(1)
-//                    .setDuration(ANIMATION_DURATION).start();
 
             for (int i = 0; i < clNavigation.getChildCount(); i++) {
                 View v = clNavigation.getChildAt(i);
