@@ -2,6 +2,7 @@ package com.example.romankubik.kubikplayer.interaction.player;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
@@ -15,15 +16,23 @@ import static com.example.romankubik.kubikplayer.general.android.PlayerApplicati
  * Created by roman.kubik on 8/16/17.
  */
 
-public class MusicPlayerService extends Service {
+public class MusicPlayerService extends Service implements Interactor.Player {
 
     @Inject
     Interactor interactor;
 
+    private final IBinder playerBinder = new PlayerBinder();
+
+    public class PlayerBinder extends Binder {
+        public MusicPlayerService getMusicService() {
+            return MusicPlayerService.this;
+        }
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return playerBinder;
     }
 
     @Override
