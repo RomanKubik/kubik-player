@@ -5,11 +5,15 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -27,6 +31,7 @@ import android.widget.TextView;
 import com.example.romankubik.kubikplayer.R;
 import com.example.romankubik.kubikplayer.general.Constants;
 import com.example.romankubik.kubikplayer.interaction.entity.Track;
+import com.example.romankubik.kubikplayer.interaction.player.MusicPlayerService;
 import com.example.romankubik.kubikplayer.presentation.player.animation.AnimatorPath;
 import com.example.romankubik.kubikplayer.presentation.player.animation.PathEvaluator;
 import com.example.romankubik.kubikplayer.presentation.player.animation.PathPoint;
@@ -44,7 +49,7 @@ import static com.example.romankubik.kubikplayer.general.android.PlayerApplicati
  * Created by roman.kubik on 9/4/17.
  */
 
-public class PlayerActivity extends AppCompatActivity implements PlayerPresenter.View {
+public class PlayerActivity extends AppCompatActivity implements PlayerPresenter.View, ServiceConnection {
 
     public static final float MATERIAL_INTERPOLATOR_FACTOR = 7f;
     public final static float SCALE_FACTOR = 6f;
@@ -103,6 +108,22 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        bindService();
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        playerPresenter.attach(((MusicPlayerService.PlayerBinder)service).getMusicService());
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+        playerPresenter.detach();
+    }
+
+    @Override
     public void onTrackReceived(Track track) {
         this.track = track;
         tvDetails.setText(track.getSong());
@@ -135,6 +156,13 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
         playerPresenter.setTrack(trackPath);
     }
 
+    private void bindService() {
+        Intent intent = new Intent(this, MusicPlayerService.class);
+        bindService(intent, this, BIND_AUTO_CREATE);
+    }
+
+    // region animations
+
     private void addTransitionListener() {
         getWindow().getSharedElementEnterTransition().addListener(new Transition.TransitionListener() {
             @Override
@@ -163,7 +191,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
             }
         });
     }
-
 
     private void showFab() {
         fabPlay.animate()
@@ -261,6 +288,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
 
     @OnClick(R.id.fab_play)
     public void onFabPressed() {
+        playerPresenter.play();
         mFabSize = getResources().getDimensionPixelSize(R.dimen.fab_size);
         AnimatorPath path = new AnimatorPath();
         float sX = fabPlay.getY();
@@ -285,6 +313,33 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
                 mRevealFlag = true;
             }
         });
+    }
+
+    // endregion
+
+    @OnClick(R.id.iv_play_pause)
+    void onPlayPauseClicked() {
+        playerPresenter.pause();
+    }
+
+    @OnClick(R.id.iv_play_back)
+    void onPlayBackClicked() {
+
+    }
+
+    @OnClick(R.id.iv_play_forward)
+    void onPlayForwardClicked() {
+
+    }
+
+    @OnClick(R.id.iv_volume_up)
+    void onVoulumeUpClicked() {
+
+    }
+
+    @OnClick(R.id.iv_volume_down)
+    void onVolumeDownClicked() {
+
     }
 
 }

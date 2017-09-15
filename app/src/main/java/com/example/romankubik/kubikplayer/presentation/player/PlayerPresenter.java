@@ -3,6 +3,7 @@ package com.example.romankubik.kubikplayer.presentation.player;
 import com.example.romankubik.kubikplayer.interaction.Interactor;
 import com.example.romankubik.kubikplayer.interaction.entity.Track;
 import com.example.romankubik.kubikplayer.interaction.media.MediaMapper;
+import com.example.romankubik.kubikplayer.interaction.player.MusicPlayerService;
 
 import java.io.File;
 
@@ -15,6 +16,16 @@ import javax.inject.Inject;
 public class PlayerPresenter {
 
     private Track track;
+
+    private Interactor.Player player;
+
+    public void attach(MusicPlayerService musicService) {
+        this.player = musicService;
+    }
+
+    public void detach() {
+        this.player = null;
+    }
 
     public interface View {
         void onTrackReceived(Track track);
@@ -36,4 +47,30 @@ public class PlayerPresenter {
         track = MediaMapper.mapFileToTrack(file);
         view.onTrackReceived(track);
     }
+
+    public void play() {
+        player.play(track);
+    }
+
+    public void pause() {
+        player.pause();
+    }
+
+    public void forward() {
+
+    }
+
+    public void backward() {
+
+    }
+
+    public void louder() {
+
+    }
+
+    public void quieter() {
+
+    }
+
+
 }

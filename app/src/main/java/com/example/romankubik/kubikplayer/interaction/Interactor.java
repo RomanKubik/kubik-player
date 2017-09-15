@@ -1,7 +1,8 @@
 package com.example.romankubik.kubikplayer.interaction;
 
+import com.example.romankubik.kubikplayer.interaction.entity.Track;
+
 import java.io.File;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -14,7 +15,17 @@ import io.reactivex.Observable;
 public class Interactor {
 
     public interface Player {
+        public void play(Track track);
 
+        public void pause();
+
+        public void forward();
+
+        public void backward();
+
+        public void louder();
+
+        public void quieter();
     }
 
     public interface Finder {

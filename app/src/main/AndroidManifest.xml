@@ -31,6 +31,8 @@
             android:theme="@style/AppTheme.Player" />
 
         <activity android:name=".presentation.main.MainActivity" />
+
+        <service android:name=".interaction.player.MusicPlayerService" />
     </application>
 
 </manifest>
