@@ -2,7 +2,6 @@ package com.example.romankubik.kubikplayer.interaction.player.di;
 
 import android.content.Context;
 
-import com.example.romankubik.kubikplayer.interaction.Interactor;
 import com.example.romankubik.kubikplayer.interaction.player.MusicPlayer;
 
 import javax.inject.Singleton;
@@ -25,12 +24,6 @@ public class PlayerModule {
         if (musicPlayer == null)
             musicPlayer = new MusicPlayer(context);
         return musicPlayer;
-    }
-
-    @Singleton
-    @Provides
-    public Interactor.Player providePlayer(Context context) {
-        return provideMusicPlayer(context);
     }
 
 }

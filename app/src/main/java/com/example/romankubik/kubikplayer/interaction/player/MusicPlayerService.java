@@ -27,6 +27,7 @@ import com.google.android.exoplayer2.util.Util;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
 
 import static com.example.romankubik.kubikplayer.general.android.PlayerApplication.component;
@@ -45,7 +46,7 @@ public class MusicPlayerService extends Service implements Interactor.Player {
     private Notification playerNotification;
 
     private BehaviorSubject<Track> currentTrack = BehaviorSubject.create();
-    private int trackPossition;
+    private int trackPosition;
 
     private final IBinder playerBinder = new PlayerBinder();
 
@@ -74,7 +75,7 @@ public class MusicPlayerService extends Service implements Interactor.Player {
     @Override
     public void forcePlay(Track track) {
         startForeground(Constants.Service.SERVICE_ID, playerNotification);
-        trackPossition = PlayList.getActualPlayList().indexOf(track);
+        trackPosition = PlayList.getActualPlayList().indexOf(track);
         playTrack(track);
     }
 
@@ -91,22 +92,22 @@ public class MusicPlayerService extends Service implements Interactor.Player {
 
     @Override
     public void forward() {
-        if (trackPossition < PlayList.getActualPlayList().size() - 1) {
-            trackPossition++;
+        if (trackPosition < PlayList.getActualPlayList().size() - 1) {
+            trackPosition++;
         } else {
-            trackPossition = 0;
+            trackPosition = 0;
         }
-        playTrack(PlayList.getActualPlayList().get(trackPossition));
+        playTrack(PlayList.getActualPlayList().get(trackPosition));
     }
 
     @Override
     public void backward() {
-        if (trackPossition != 0) {
-            trackPossition--;
+        if (trackPosition != 0) {
+            trackPosition--;
         } else {
-            trackPossition = PlayList.getActualPlayList().size() - 1;
+            trackPosition = PlayList.getActualPlayList().size() - 1;
         }
-        playTrack(PlayList.getActualPlayList().get(trackPossition));
+        playTrack(PlayList.getActualPlayList().get(trackPosition));
     }
 
     @Override
@@ -117,6 +118,11 @@ public class MusicPlayerService extends Service implements Interactor.Player {
     @Override
     public void quieter() {
 
+    }
+
+    @Override
+    public Observable<Track> currentTrack() {
+        return currentTrack;
     }
 
     // endregion

@@ -24,6 +24,8 @@ public class Interactor {
         void louder();
 
         void quieter();
+
+        Observable<Track> currentTrack();
     }
 
     public interface Finder {
@@ -35,8 +37,7 @@ public class Interactor {
     private Finder finder;
 
     @Inject
-    public Interactor(Player player, Finder finder) {
-        this.player = player;
+    public Interactor(Finder finder) {
         this.finder = finder;
     }
 
