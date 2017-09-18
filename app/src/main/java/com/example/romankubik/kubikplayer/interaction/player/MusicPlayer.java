@@ -18,12 +18,12 @@ public class MusicPlayer implements Interactor.Player {
     }
 
     @Override
-    public void play(Track track) {
+    public void forcePlay(Track track) {
 
     }
 
     @Override
-    public void pause() {
+    public void playPause() {
 
     }
 

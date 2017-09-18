@@ -159,6 +159,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     private void bindService() {
         Intent intent = new Intent(this, MusicPlayerService.class);
         bindService(intent, this, BIND_AUTO_CREATE);
+        startService(intent);
     }
 
     // region animations

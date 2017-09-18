@@ -9,4 +9,8 @@ public final class Constants {
     public static final class Intent {
         public static final String TRACK_EXTRA = "com.example.romankubik.kubikplayer.general.constants.intent.track.extra";
     }
+
+    public static final class Service {
+        public static final int SERVICE_ID = 89960;
+    }
 }

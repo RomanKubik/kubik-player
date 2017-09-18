@@ -15,9 +15,9 @@ import io.reactivex.Observable;
 public class Interactor {
 
     public interface Player {
-        public void play(Track track);
+        public void forcePlay(Track track);
 
-        public void pause();
+        public void playPause();
 
         public void forward();
 

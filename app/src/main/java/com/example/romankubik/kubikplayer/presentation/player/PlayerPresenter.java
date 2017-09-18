@@ -19,14 +19,6 @@ public class PlayerPresenter {
 
     private Interactor.Player player;
 
-    public void attach(MusicPlayerService musicService) {
-        this.player = musicService;
-    }
-
-    public void detach() {
-        this.player = null;
-    }
-
     public interface View {
         void onTrackReceived(Track track);
 
@@ -48,12 +40,20 @@ public class PlayerPresenter {
         view.onTrackReceived(track);
     }
 
+    public void attach(MusicPlayerService musicService) {
+        this.player = musicService;
+    }
+
+    public void detach() {
+        this.player = null;
+    }
+
     public void play() {
-        player.play(track);
+        player.forcePlay(track);
     }
 
     public void pause() {
-        player.pause();
+        player.playPause();
     }
 
     public void forward() {
