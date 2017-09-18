@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 
 import com.example.romankubik.kubikplayer.general.Constants;
 import com.example.romankubik.kubikplayer.interaction.Interactor;
+import com.example.romankubik.kubikplayer.interaction.entity.PlayList;
 import com.example.romankubik.kubikplayer.interaction.entity.Track;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -26,6 +27,8 @@ import com.google.android.exoplayer2.util.Util;
 
 import javax.inject.Inject;
 
+import io.reactivex.subjects.BehaviorSubject;
+
 import static com.example.romankubik.kubikplayer.general.android.PlayerApplication.component;
 
 /**
@@ -41,7 +44,8 @@ public class MusicPlayerService extends Service implements Interactor.Player {
     private BandwidthMeter bandwidthMeter;
     private Notification playerNotification;
 
-    private Track currentTrack;
+    private BehaviorSubject<Track> currentTrack = BehaviorSubject.create();
+    private int trackPossition;
 
     private final IBinder playerBinder = new PlayerBinder();
 
@@ -70,9 +74,8 @@ public class MusicPlayerService extends Service implements Interactor.Player {
     @Override
     public void forcePlay(Track track) {
         startForeground(Constants.Service.SERVICE_ID, playerNotification);
-        currentTrack = track;
-        exoPlayer.prepare(prepareMediaSource(track));
-        exoPlayer.setPlayWhenReady(true);
+        trackPossition = PlayList.getActualPlayList().indexOf(track);
+        playTrack(track);
     }
 
     @Override
@@ -88,12 +91,22 @@ public class MusicPlayerService extends Service implements Interactor.Player {
 
     @Override
     public void forward() {
-
+        if (trackPossition < PlayList.getActualPlayList().size() - 1) {
+            trackPossition++;
+        } else {
+            trackPossition = 0;
+        }
+        playTrack(PlayList.getActualPlayList().get(trackPossition));
     }
 
     @Override
     public void backward() {
-
+        if (trackPossition != 0) {
+            trackPossition--;
+        } else {
+            trackPossition = PlayList.getActualPlayList().size() - 1;
+        }
+        playTrack(PlayList.getActualPlayList().get(trackPossition));
     }
 
     @Override
@@ -124,5 +137,11 @@ public class MusicPlayerService extends Service implements Interactor.Player {
         DefaultExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
         return new ExtractorMediaSource(Uri.parse(track.getPath()), dataSourceFactory,
                 extractorsFactory, null, null);
+    }
+
+    private void playTrack(Track track) {
+        currentTrack.onNext(track);
+        exoPlayer.prepare(prepareMediaSource(track));
+        exoPlayer.setPlayWhenReady(true);
     }
 }

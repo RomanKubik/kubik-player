@@ -325,12 +325,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
 
     @OnClick(R.id.iv_play_back)
     void onPlayBackClicked() {
-
+        playerPresenter.backward();
     }
 
     @OnClick(R.id.iv_play_forward)
     void onPlayForwardClicked() {
-
+        playerPresenter.forward();
     }
 
     @OnClick(R.id.iv_volume_up)

@@ -58,11 +58,11 @@ public class PlayerPresenter {
     }
 
     public void forward() {
-
+        player.forward();
     }
 
     public void backward() {
-
+        player.backward();
     }
 
     public void louder() {

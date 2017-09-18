@@ -26,6 +26,11 @@ public class Track {
         id = UUID.randomUUID().toString();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Track && ((Track) obj).getId().equals(id);
+    }
+
     public String getId() {
         return id;
     }
