@@ -12,12 +12,17 @@ import com.example.romankubik.kubikplayer.general.Constants;
 import com.example.romankubik.kubikplayer.interaction.Interactor;
 import com.example.romankubik.kubikplayer.interaction.entity.PlayList;
 import com.example.romankubik.kubikplayer.interaction.entity.Track;
+import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
@@ -36,7 +41,7 @@ import static com.example.romankubik.kubikplayer.general.android.PlayerApplicati
  * Created by roman.kubik on 8/16/17.
  */
 
-public class MusicPlayerService extends Service implements Interactor.Player {
+public class MusicPlayerService extends Service implements Interactor.Player, ExoPlayer.EventListener {
 
     @Inject
     Interactor interactor;
@@ -127,9 +132,50 @@ public class MusicPlayerService extends Service implements Interactor.Player {
 
     // endregion
 
+    // region ExoPlayer Events Listeners
+
+    @Override
+    public void onTimelineChanged(Timeline timeline, Object manifest) {
+        //ignored
+    }
+
+    @Override
+    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+        //ignored
+    }
+
+    @Override
+    public void onLoadingChanged(boolean isLoading) {
+        //ignored
+    }
+
+    @Override
+    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+        if (playbackState == ExoPlayer.STATE_ENDED)
+            forward();
+    }
+
+    @Override
+    public void onPlayerError(ExoPlaybackException error) {
+        //ignored
+    }
+
+    @Override
+    public void onPositionDiscontinuity() {
+        //ignored
+    }
+
+    @Override
+    public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+        //ignored
+    }
+
+    // endregion
+
     private void initPlayer() {
         bandwidthMeter = new DefaultBandwidthMeter();
         exoPlayer = ExoPlayerFactory.newSimpleInstance(this, new DefaultTrackSelector());
+        exoPlayer.addListener(this);
     }
 
     private void prepareNotification() {
