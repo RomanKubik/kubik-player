@@ -1,11 +1,10 @@
 package com.example.romankubik.kubikplayer.presentation.player;
 
+import com.annimon.stream.Stream;
 import com.example.romankubik.kubikplayer.interaction.Interactor;
+import com.example.romankubik.kubikplayer.interaction.entity.PlayList;
 import com.example.romankubik.kubikplayer.interaction.entity.Track;
-import com.example.romankubik.kubikplayer.interaction.media.MediaMapper;
 import com.example.romankubik.kubikplayer.interaction.player.MusicPlayerService;
-
-import java.io.File;
 
 import javax.inject.Inject;
 
@@ -34,10 +33,12 @@ public class PlayerPresenter {
         this.interactor = interactor;
     }
 
-    public void setTrack(String trackPath) {
-        File file = new File(trackPath);
-        track = MediaMapper.mapFileToTrack(file);
-        view.onTrackReceived(track);
+    public void setTrack(String trackId) {
+        Stream.of(PlayList.getActualPlayList())
+                .filter(t -> t.getId().equals(trackId))
+                .findFirst()
+                .map(t -> track = t)
+                .ifPresent(t -> view.onTrackReceived(track));
     }
 
     public void attach(MusicPlayerService musicService) {

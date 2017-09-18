@@ -152,8 +152,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     }
 
     private void getExtras() {
-        String trackPath = getIntent().getStringExtra(Constants.Intent.TRACK_EXTRA);
-        playerPresenter.setTrack(trackPath);
+        String trackId = getIntent().getStringExtra(Constants.Intent.TRACK_EXTRA);
+        playerPresenter.setTrack(trackId);
     }
 
     private void bindService() {

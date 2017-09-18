@@ -11,9 +11,14 @@ public class PlayList {
 
     private static List<Track> actualPlayList = new ArrayList<>();
 
-    public static void setActualPlayList(List<Track> playList) {
+    public static void addToActualList(Track track) {
+        actualPlayList.add(track);
+    }
+
+    public static List<Track> setActualPlayList(List<Track> playList) {
         actualPlayList.clear();
         actualPlayList.addAll(playList);
+        return actualPlayList;
     }
 
     public static List<Track> getActualPlayList() {

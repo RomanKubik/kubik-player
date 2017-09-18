@@ -20,7 +20,7 @@ public class Navigate {
     @SafeVarargs
     public static void toPlayerActivity(@NonNull Activity activity, @NonNull Track track, Pair<View, String>... pairs) {
         Intent intent = new Intent(activity, PlayerActivity.class);
-        intent.putExtra(Constants.Intent.TRACK_EXTRA, track.getPath());
+        intent.putExtra(Constants.Intent.TRACK_EXTRA, track.getId());
         if (pairs.length != 0) {
             ActivityOptionsCompat options = ActivityOptionsCompat
                     .makeSceneTransitionAnimation(activity, pairs);

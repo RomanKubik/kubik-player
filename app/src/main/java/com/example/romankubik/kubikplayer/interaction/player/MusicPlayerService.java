@@ -15,6 +15,7 @@ import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
@@ -40,6 +41,8 @@ public class MusicPlayerService extends Service implements Interactor.Player {
     private BandwidthMeter bandwidthMeter;
     private Notification playerNotification;
 
+    private Track currentTrack;
+
     private final IBinder playerBinder = new PlayerBinder();
 
     public class PlayerBinder extends Binder {
@@ -62,13 +65,13 @@ public class MusicPlayerService extends Service implements Interactor.Player {
         prepareNotification();
     }
 
+    // region Interactor.Player
+
     @Override
     public void forcePlay(Track track) {
         startForeground(Constants.Service.SERVICE_ID, playerNotification);
-        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, "mediaPlayerSample"), (TransferListener<? super DataSource>) bandwidthMeter);
-        DefaultExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-        ExtractorMediaSource mediaSource = new ExtractorMediaSource(Uri.parse(track.getPath()), dataSourceFactory, extractorsFactory, null, null);
-        exoPlayer.prepare(mediaSource);
+        currentTrack = track;
+        exoPlayer.prepare(prepareMediaSource(track));
         exoPlayer.setPlayWhenReady(true);
     }
 
@@ -103,6 +106,8 @@ public class MusicPlayerService extends Service implements Interactor.Player {
 
     }
 
+    // endregion
+
     private void initPlayer() {
         bandwidthMeter = new DefaultBandwidthMeter();
         exoPlayer = ExoPlayerFactory.newSimpleInstance(this, new DefaultTrackSelector());
@@ -110,5 +115,14 @@ public class MusicPlayerService extends Service implements Interactor.Player {
 
     private void prepareNotification() {
         playerNotification = new Notification.Builder(this).build();
+    }
+
+    private MediaSource prepareMediaSource(Track track) {
+        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this,
+                Util.getUserAgent(this, "KubikPlayerApp"),
+                (TransferListener<? super DataSource>) bandwidthMeter);
+        DefaultExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+        return new ExtractorMediaSource(Uri.parse(track.getPath()), dataSourceFactory,
+                extractorsFactory, null, null);
     }
 }
