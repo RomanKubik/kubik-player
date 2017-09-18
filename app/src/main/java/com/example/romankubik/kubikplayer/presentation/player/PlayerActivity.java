@@ -19,6 +19,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.Transition;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.AccelerateInterpolator;
@@ -61,7 +62,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     @BindView(R.id.sb_volume)
     SeekBar sbVolume;
     @BindView(R.id.sb_music)
-    SeekBar pbMusic;
+    SeekBar sbMusic;
     @BindView(R.id.iv_logo)
     ImageView ivLogo;
     @BindView(R.id.tv_details)
@@ -114,6 +115,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        playerPresenter.detach();
+    }
+
+    @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         playerPresenter.attach(((MusicPlayerService.PlayerBinder)service).getMusicService());
     }
@@ -144,6 +151,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
             ivVolumeUp.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
             ivLogo.setImageBitmap(track.getImage());
         }
+    }
+
+    @Override
+    public void onProgressChanged(int progress) {
+        Log.d("MyTag", "onProgressChanged: " + progress);
+        sbMusic.setProgress(progress);
     }
 
     @Override

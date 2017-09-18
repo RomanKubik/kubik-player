@@ -30,6 +30,8 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.TransferListener;
 import com.google.android.exoplayer2.util.Util;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
@@ -43,6 +45,7 @@ import static com.example.romankubik.kubikplayer.general.android.PlayerApplicati
 
 public class MusicPlayerService extends Service implements Interactor.Player, ExoPlayer.EventListener {
 
+    public static final int PROGRESS_MAX_SIZE = 1000;
     @Inject
     Interactor interactor;
 
@@ -130,9 +133,16 @@ public class MusicPlayerService extends Service implements Interactor.Player, Ex
         return currentTrack;
     }
 
+    @Override
+    public Observable<Integer> playProgress() {
+        return Observable.interval(Constants.Time.SECOND_IN_MILIS, TimeUnit.MILLISECONDS)
+                .map(l -> exoPlayer.getCurrentPosition())
+                .map(this::mapTimeToProgress);
+    }
+
     // endregion
 
-    // region ExoPlayer Events Listeners
+    // region ExoPlayer Events Listener
 
     @Override
     public void onTimelineChanged(Timeline timeline, Object manifest) {
@@ -195,5 +205,9 @@ public class MusicPlayerService extends Service implements Interactor.Player, Ex
         currentTrack.onNext(track);
         exoPlayer.prepare(prepareMediaSource(track));
         exoPlayer.setPlayWhenReady(true);
+    }
+
+    private int mapTimeToProgress(long progress) {
+        return (int) (progress * PROGRESS_MAX_SIZE / exoPlayer.getDuration());
     }
 }

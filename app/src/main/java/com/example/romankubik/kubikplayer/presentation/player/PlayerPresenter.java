@@ -8,6 +8,8 @@ import com.example.romankubik.kubikplayer.interaction.player.MusicPlayerService;
 
 import javax.inject.Inject;
 
+import io.reactivex.disposables.CompositeDisposable;
+
 /**
  * Created by roman.kubik on 9/4/17.
  */
@@ -18,8 +20,12 @@ public class PlayerPresenter {
 
     private Interactor.Player player;
 
+    private CompositeDisposable compositeDisposable;
+
     public interface View {
         void onTrackReceived(Track track);
+
+        void onProgressChanged(int progress);
 
         void showError(String message);
     }
@@ -31,6 +37,7 @@ public class PlayerPresenter {
     public PlayerPresenter(View view, Interactor interactor) {
         this.view = view;
         this.interactor = interactor;
+        this.compositeDisposable = new CompositeDisposable();
     }
 
     public void setTrack(String trackId) {
@@ -43,10 +50,12 @@ public class PlayerPresenter {
 
     public void attach(MusicPlayerService musicService) {
         this.player = musicService;
+        compositeDisposable.add(this.player.playProgress().subscribe(p -> view.onProgressChanged(p)));
     }
 
     public void detach() {
         this.player = null;
+        compositeDisposable.clear();
     }
 
     public void play() {

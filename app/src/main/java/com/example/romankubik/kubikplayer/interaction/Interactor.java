@@ -26,6 +26,8 @@ public class Interactor {
         void quieter();
 
         Observable<Track> currentTrack();
+
+        Observable<Integer> playProgress();
     }
 
     public interface Finder {
