@@ -129,6 +129,11 @@ public class MusicPlayerService extends Service implements Interactor.Player, Ex
     }
 
     @Override
+    public void setProgress(int position) {
+        exoPlayer.seekTo(mapProgressToTime(position));
+    }
+
+    @Override
     public Observable<Track> currentTrack() {
         return currentTrack;
     }
@@ -209,5 +214,9 @@ public class MusicPlayerService extends Service implements Interactor.Player, Ex
 
     private int mapTimeToProgress(long progress) {
         return (int) (progress * PROGRESS_MAX_SIZE / exoPlayer.getDuration());
+    }
+
+    private long mapProgressToTime(int progress) {
+        return progress * exoPlayer.getDuration() / PROGRESS_MAX_SIZE;
     }
 }

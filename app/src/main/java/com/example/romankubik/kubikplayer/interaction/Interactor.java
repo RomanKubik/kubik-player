@@ -25,6 +25,8 @@ public class Interactor {
 
         void quieter();
 
+        void setProgress(int position);
+
         Observable<Track> currentTrack();
 
         Observable<Integer> playProgress();

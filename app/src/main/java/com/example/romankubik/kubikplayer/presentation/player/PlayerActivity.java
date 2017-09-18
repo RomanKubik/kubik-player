@@ -19,7 +19,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.Transition;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.AccelerateInterpolator;
@@ -106,6 +105,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
         ButterKnife.bind(this);
         getExtras();
         addTransitionListener();
+        addProgressChangeListener();
     }
 
     @Override
@@ -123,7 +123,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
-        playerPresenter.attach(((MusicPlayerService.PlayerBinder)service).getMusicService());
+        playerPresenter.attach(((MusicPlayerService.PlayerBinder) service).getMusicService());
     }
 
     @Override
@@ -156,7 +156,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
 
     @Override
     public void onProgressChanged(int progress) {
-        Log.d("MyTag", "onProgressChanged: " + progress);
         sbMusic.setProgress(progress);
     }
 
@@ -174,6 +173,26 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
         Intent intent = new Intent(this, MusicPlayerService.class);
         bindService(intent, this, BIND_AUTO_CREATE);
         startService(intent);
+    }
+
+    private void addProgressChangeListener() {
+        sbMusic.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser)
+                    playerPresenter.setProgress(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // ignored
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // ignored
+            }
+        });
     }
 
     // region animations

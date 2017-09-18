@@ -82,5 +82,9 @@ public class PlayerPresenter {
 
     }
 
+    public void setProgress(int progress) {
+        player.setProgress(progress);
+    }
+
 
 }
