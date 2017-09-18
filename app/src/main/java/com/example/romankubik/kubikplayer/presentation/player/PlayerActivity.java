@@ -117,6 +117,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unbindService(this);
         playerPresenter.detach();
     }
 
