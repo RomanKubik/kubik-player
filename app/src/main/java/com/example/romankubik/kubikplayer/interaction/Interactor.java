@@ -27,6 +27,10 @@ public class Interactor {
 
         void setProgress(int position);
 
+        boolean isTrackPlaying(Track track);
+
+        Observable<Boolean> isPlaying();
+
         Observable<Track> currentTrack();
 
         Observable<Integer> playProgress();

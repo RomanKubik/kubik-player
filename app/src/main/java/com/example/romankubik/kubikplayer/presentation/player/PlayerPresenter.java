@@ -23,9 +23,13 @@ public class PlayerPresenter {
     private CompositeDisposable compositeDisposable;
 
     public interface View {
-        void onTrackReceived(Track track);
+        void onTrackReceived(Track track, boolean isPlaying);
 
         void onProgressChanged(int progress);
+
+        void onTrackChanged(Track track);
+
+        void onPlayPause(boolean playing);
 
         void showError(String message);
     }
@@ -40,17 +44,23 @@ public class PlayerPresenter {
         this.compositeDisposable = new CompositeDisposable();
     }
 
+    private void subscribeObservers() {
+        compositeDisposable.add(
+                this.player.playProgress().subscribe(p -> view.onProgressChanged(p)));
+    }
+
     public void setTrack(String trackId) {
         Stream.of(PlayList.getActualPlayList())
                 .filter(t -> t.getId().equals(trackId))
                 .findFirst()
                 .map(t -> track = t)
-                .ifPresent(t -> view.onTrackReceived(track));
+                .ifPresent(t -> view.onTrackReceived(track,
+                        player != null && player.isTrackPlaying(t)));
     }
 
     public void attach(MusicPlayerService musicService) {
         this.player = musicService;
-        compositeDisposable.add(this.player.playProgress().subscribe(p -> view.onProgressChanged(p)));
+        subscribeObservers();
     }
 
     public void detach() {

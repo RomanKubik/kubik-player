@@ -27,6 +27,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.romankubik.kubikplayer.R;
 import com.example.romankubik.kubikplayer.general.Constants;
@@ -132,11 +133,13 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     }
 
     @Override
-    public void onTrackReceived(Track track) {
+    public void onTrackReceived(Track track, boolean isPlaying) {
         this.track = track;
         tvDetails.setText(track.getSong());
         tvSong.setText(track.getAlbum());
         tvArtist.setText(track.getArtist());
+        if (isPlaying)
+            Toast.makeText(this, "Playing", Toast.LENGTH_SHORT).show();
         if (track.getImage() != null) {
             getWindow().setStatusBarColor(track.getPrimaryColor());
             clDetails.setBackgroundColor(track.getSecondaryColor());
@@ -157,6 +160,16 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     @Override
     public void onProgressChanged(int progress) {
         sbMusic.setProgress(progress);
+    }
+
+    @Override
+    public void onTrackChanged(Track track) {
+
+    }
+
+    @Override
+    public void onPlayPause(boolean playing) {
+
     }
 
     @Override

@@ -54,6 +54,7 @@ public class MusicPlayerService extends Service implements Interactor.Player, Ex
     private Notification playerNotification;
 
     private BehaviorSubject<Track> currentTrack = BehaviorSubject.create();
+    private BehaviorSubject<Boolean> isPlaying = BehaviorSubject.createDefault(false);
     private int trackPosition;
 
     private final IBinder playerBinder = new PlayerBinder();
@@ -92,9 +93,11 @@ public class MusicPlayerService extends Service implements Interactor.Player, Ex
         if (exoPlayer.getPlayWhenReady()) {
             stopForeground(false);
             exoPlayer.setPlayWhenReady(false);
+            isPlaying.onNext(false);
         } else {
             startForeground(Constants.Service.SERVICE_ID, playerNotification);
             exoPlayer.setPlayWhenReady(true);
+            isPlaying.onNext(true);
         }
     }
 
@@ -131,6 +134,18 @@ public class MusicPlayerService extends Service implements Interactor.Player, Ex
     @Override
     public void setProgress(int position) {
         exoPlayer.seekTo(mapProgressToTime(position));
+    }
+
+    @Override
+    public boolean isTrackPlaying(Track track) {
+        return currentTrack.getValue() != null
+                && currentTrack.getValue().equals(track)
+                && exoPlayer.getPlayWhenReady();
+    }
+
+    @Override
+    public Observable<Boolean> isPlaying() {
+        return isPlaying;
     }
 
     @Override
