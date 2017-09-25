@@ -93,8 +93,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     @Inject
     PlayerPresenter playerPresenter;
 
-    private boolean mRevealFlag;
-    private float mFabSize;
+    private boolean revealFlag;
+    private float fabSize;
+    private boolean playingTrackFlag;
 
     private Track track;
 
@@ -135,27 +136,38 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     @Override
     public void onTrackReceived(Track track, boolean trackPlaying) {
         this.track = track;
-//        if (trackPlaying) {
-//            tvDetails.setText(track.getSong());
+        playingTrackFlag = trackPlaying;
+        tvDetails.setText(track.getSong());
+        tvSong.setText(track.getAlbum());
+        tvArtist.setText(track.getArtist());
+        if (track.getImage() != null) {
+            getWindow().setStatusBarColor(track.getPrimaryColor());
+            clDetails.setBackgroundColor(track.getSecondaryColor());
+            clNavigation.setBackgroundColor(track.getPrimaryColor());
+            Drawable fabImage = getDrawable(R.drawable.ic_play_arrow_white_24dp);
+            fabImage.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+            fabPlay.setImageDrawable(fabImage);
+            fabPlay.setBackgroundTintList(ColorStateList.valueOf(track.getPrimaryColor()));
+            ivPlayBack.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+            ivPlayForward.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+            ivPlayPause.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+            ivVolumeDown.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+            ivVolumeUp.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+            ivLogo.setImageBitmap(track.getImage());
+        }
+        if (trackPlaying) {
 //            fabPlay.setVisibility(View.INVISIBLE);
 //            fabPlay.setScaleX(ZERO_SCALE);
 //            fabPlay.setScaleY(ZERO_SCALE);
-//            clDetails.setVisibility(View.INVISIBLE);
+//                clDetails.animate().alpha(0f).setDuration(ANIMATION_DURATION / 2);
 //            clNavigation.setBackgroundColor(track.getPrimaryColor());
 //
 //            clNavigation.setScaleX(NORMAL_SCALE);
 //            clNavigation.setScaleY(NORMAL_SCALE);
 //
-//            if (track.getImage() != null) {
-//                tvDetails.setBackgroundColor(track.getSecondaryColor());
-//                tvDetails.setTextColor(track.getBodyColor());
-//                ivPlayBack.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-//                ivPlayForward.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-//                ivPlayPause.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-//                ivVolumeDown.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-//                ivVolumeUp.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-//                ivLogo.setImageBitmap(track.getImage());
-//            }
+//            tvDetails.setBackgroundColor(track.getSecondaryColor());
+//            tvDetails.setTextColor(track.getBodyColor());
+//
 //            for (int i = 0; i < clNavigation.getChildCount(); i++) {
 //                View v = clNavigation.getChildAt(i);
 //                ViewPropertyAnimator animator = v.animate()
@@ -167,52 +179,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
 //                animator.setStartDelay(i * 25);
 //                animator.start();
 //            }
-//        } else {
-            tvDetails.setText(track.getSong());
-            tvSong.setText(track.getAlbum());
-            tvArtist.setText(track.getArtist());
-            if (track.getImage() != null) {
-                getWindow().setStatusBarColor(track.getPrimaryColor());
-                clDetails.setBackgroundColor(track.getSecondaryColor());
-                clNavigation.setBackgroundColor(track.getPrimaryColor());
-                Drawable fabImage = getDrawable(R.drawable.ic_play_arrow_white_24dp);
-                fabImage.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-                fabPlay.setImageDrawable(fabImage);
-                fabPlay.setBackgroundTintList(ColorStateList.valueOf(track.getPrimaryColor()));
-                ivPlayBack.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-                ivPlayForward.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-                ivPlayPause.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-                ivVolumeDown.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-                ivVolumeUp.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-                ivLogo.setImageBitmap(track.getImage());
-            }
-            if (trackPlaying) {
-                fabPlay.setVisibility(View.INVISIBLE);
-                fabPlay.setScaleX(ZERO_SCALE);
-                fabPlay.setScaleY(ZERO_SCALE);
-                clDetails.setVisibility(View.INVISIBLE);
-                clNavigation.setBackgroundColor(track.getPrimaryColor());
-
-                clNavigation.setScaleX(NORMAL_SCALE);
-                clNavigation.setScaleY(NORMAL_SCALE);
-
-                tvDetails.setBackgroundColor(track.getSecondaryColor());
-                tvDetails.setTextColor(track.getBodyColor());
-
-                for (int i = 0; i < clNavigation.getChildCount(); i++) {
-                    View v = clNavigation.getChildAt(i);
-                    ViewPropertyAnimator animator = v.animate()
-                            .setInterpolator(new DecelerateInterpolator(MATERIAL_INTERPOLATOR_FACTOR))
-                            .scaleX(NORMAL_SCALE)
-                            .scaleY(NORMAL_SCALE)
-                            .setDuration(SHORTER_ANIMATION_DURATION);
-
-                    animator.setStartDelay(i * 25);
-                    animator.start();
-                }
-            }
-//        }
-
+        }
     }
 
     @Override
@@ -277,7 +244,30 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
 
             @Override
             public void onTransitionEnd(Transition transition) {
-                showFab();
+                if (playingTrackFlag) {
+                    clDetails.animate().alpha(0f).setDuration(ANIMATION_DURATION * 2).setInterpolator(new DecelerateInterpolator(MATERIAL_INTERPOLATOR_FACTOR));
+                    clNavigation.setBackgroundColor(track.getPrimaryColor());
+
+                    clNavigation.setScaleX(NORMAL_SCALE);
+                    clNavigation.setScaleY(NORMAL_SCALE);
+
+                    tvDetails.setBackgroundColor(track.getSecondaryColor());
+                    tvDetails.setTextColor(track.getBodyColor());
+
+                    for (int i = 0; i < clNavigation.getChildCount(); i++) {
+                        View v = clNavigation.getChildAt(i);
+                        ViewPropertyAnimator animator = v.animate()
+                                .setInterpolator(new DecelerateInterpolator(MATERIAL_INTERPOLATOR_FACTOR))
+                                .scaleX(NORMAL_SCALE)
+                                .scaleY(NORMAL_SCALE)
+                                .setDuration(SHORTER_ANIMATION_DURATION);
+
+                        animator.setStartDelay(i * 25);
+                        animator.start();
+                    }
+                } else {
+                    showFab();
+                }
             }
 
             @Override
@@ -385,8 +375,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     public void setFabLoc(PathPoint newLoc) {
         fabPlay.setTranslationX(newLoc.mX);
 
-        if (mRevealFlag)
-            fabPlay.setTranslationY(newLoc.mY - (mFabSize / 2));
+        if (revealFlag)
+            fabPlay.setTranslationY(newLoc.mY - (fabSize / 2));
         else
             fabPlay.setTranslationY(newLoc.mY);
     }
@@ -394,13 +384,13 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     @OnClick(R.id.fab_play)
     public void onFabPressed() {
         playerPresenter.play();
-        mFabSize = getResources().getDimensionPixelSize(R.dimen.fab_size);
+        fabSize = getResources().getDimensionPixelSize(R.dimen.fab_size);
         AnimatorPath path = new AnimatorPath();
         float sX = fabPlay.getY();
         float startX = fabPlay.getTranslationX();
-        float startY = fabPlay.getTranslationY() + (mFabSize / 2);
-        float endX = -ivPlayPause.getX() + (mFabSize / 2);
-        float endY = ivPlayPause.getY() + startY + (mFabSize / 2);
+        float startY = fabPlay.getTranslationY() + (fabSize / 2);
+        float endX = -ivPlayPause.getX() + (fabSize / 2);
+        float endY = ivPlayPause.getY() + startY + (fabSize / 2);
         path.moveTo(startX, startY);
         path.curveTo(startX, startY, startX, endY, endX, endY);
 
@@ -412,10 +402,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
         anim.start();
 
         anim.addUpdateListener(animation -> {
-            if (Math.abs(sX - fabPlay.getY()) > mFabSize) ivLogo.bringToFront();
-            if (!mRevealFlag) {
+            if (Math.abs(sX - fabPlay.getY()) > fabSize) ivLogo.bringToFront();
+            if (!revealFlag) {
                 animateViewsOnFab();
-                mRevealFlag = true;
+                revealFlag = true;
             }
         });
     }
