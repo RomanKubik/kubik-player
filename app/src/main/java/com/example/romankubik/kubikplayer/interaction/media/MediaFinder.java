@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import com.example.romankubik.kubikplayer.interaction.Interactor;
+import com.example.romankubik.kubikplayer.interaction.entity.Track;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class MediaFinder implements Interactor.Finder {
     }
 
     @Override
-    public Observable<File> findAllMusicFiles() {
+    public Observable<Track> findAllMusicFiles() {
         return Observable.create(s -> {
             ContentResolver cr = context.getContentResolver();
 
@@ -49,7 +50,10 @@ public class MediaFinder implements Interactor.Finder {
                         String data = cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.DATA));
                         File f = new File(data);
                         if (f.length() != 0) {
-                            s.onNext(f);
+                            try {
+                                s.onNext(MediaMapper.mapFileToTrack(f));
+                            } catch (Exception ignored) {
+                            }
                         }
                     }
 

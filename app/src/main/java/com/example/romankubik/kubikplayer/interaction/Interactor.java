@@ -1,7 +1,6 @@
 package com.example.romankubik.kubikplayer.interaction;
 
-import java.io.File;
-import java.util.List;
+import com.example.romankubik.kubikplayer.interaction.entity.Track;
 
 import javax.inject.Inject;
 
@@ -14,11 +13,31 @@ import io.reactivex.Observable;
 public class Interactor {
 
     public interface Player {
+        void forcePlay(Track track);
 
+        void playPause();
+
+        void forward();
+
+        void backward();
+
+        void setVolume(int level);
+
+        void setProgress(int position);
+
+        boolean isTrackPlaying(Track track);
+
+        Observable<Boolean> isPlaying();
+
+        Observable<Track> currentTrack();
+
+        Observable<Integer> playProgress();
+
+        Observable<Integer> volumeLevel();
     }
 
     public interface Finder {
-        Observable<File> findAllMusicFiles();
+        Observable<Track> findAllMusicFiles();
     }
 
 
@@ -26,8 +45,7 @@ public class Interactor {
     private Finder finder;
 
     @Inject
-    public Interactor(Player player, Finder finder) {
-        this.player = player;
+    public Interactor(Finder finder) {
         this.finder = finder;
     }
 

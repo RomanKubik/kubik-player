@@ -84,6 +84,7 @@
                 android:id="@+id/sb_music"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:max="1000"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -181,6 +182,7 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="32dp"
+                android:max="1000"
                 android:scaleX="0"
                 android:scaleY="0"
                 app:layout_constraintBottom_toBottomOf="parent"

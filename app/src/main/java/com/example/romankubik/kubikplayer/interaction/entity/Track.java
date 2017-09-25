@@ -4,12 +4,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.graphics.Palette;
 
+import java.util.UUID;
+
 /**
  * Created by roman.kubik on 8/17/17.
  */
 
 public class Track {
 
+    private String id;
     private String path;
     private String artist;
     private String song;
@@ -18,6 +21,19 @@ public class Track {
     private int primaryColor;
     private int secondaryColor;
     private int bodyColor;
+
+    public Track() {
+        id = UUID.randomUUID().toString();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Track && ((Track) obj).getId().equals(id);
+    }
+
+    public String getId() {
+        return id;
+    }
 
     public String getPath() {
         return path;

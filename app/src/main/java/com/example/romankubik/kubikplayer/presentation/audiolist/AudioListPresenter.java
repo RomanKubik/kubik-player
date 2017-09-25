@@ -2,8 +2,8 @@ package com.example.romankubik.kubikplayer.presentation.audiolist;
 
 import com.example.romankubik.kubikplayer.general.di.ActivityScope;
 import com.example.romankubik.kubikplayer.interaction.Interactor;
+import com.example.romankubik.kubikplayer.interaction.entity.PlayList;
 import com.example.romankubik.kubikplayer.interaction.entity.Track;
-import com.example.romankubik.kubikplayer.interaction.media.MediaMapper;
 
 import java.util.List;
 
@@ -42,9 +42,9 @@ public class AudioListPresenter {
                 .findAllMusicFiles()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(MediaMapper::mapFileToTrack)
                 .doOnComplete(() -> view.showProgress(false))
                 .toList()
+                .map(PlayList::setActualPlayList)
                 .subscribe(l -> view.onTrackListReceived(l),
                         e -> {
                             view.showError("Can't load music from music directory");
