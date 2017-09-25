@@ -140,21 +140,19 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
         tvDetails.setText(track.getSong());
         tvSong.setText(track.getAlbum());
         tvArtist.setText(track.getArtist());
-        if (track.getImage() != null) {
-            getWindow().setStatusBarColor(track.getPrimaryColor());
-            clDetails.setBackgroundColor(track.getSecondaryColor());
-            clNavigation.setBackgroundColor(track.getPrimaryColor());
-            Drawable fabImage = getDrawable(R.drawable.ic_play_arrow_white_24dp);
-            fabImage.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-            fabPlay.setImageDrawable(fabImage);
-            fabPlay.setBackgroundTintList(ColorStateList.valueOf(track.getPrimaryColor()));
-            ivPlayBack.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-            ivPlayForward.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-            ivPlayPause.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-            ivVolumeDown.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-            ivVolumeUp.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-            ivLogo.setImageBitmap(track.getImage());
-        }
+        getWindow().setStatusBarColor(track.getPrimaryColor());
+        clDetails.setBackgroundColor(track.getSecondaryColor());
+        clNavigation.setBackgroundColor(track.getPrimaryColor());
+        Drawable fabImage = getDrawable(R.drawable.ic_play_arrow_white_24dp);
+        fabImage.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+        fabPlay.setImageDrawable(fabImage);
+        fabPlay.setBackgroundTintList(ColorStateList.valueOf(track.getPrimaryColor()));
+        ivPlayBack.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+        ivPlayForward.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+        ivPlayPause.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+        ivVolumeDown.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+        ivVolumeUp.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+        ivLogo.setImageBitmap(track.getImage());
     }
 
     @Override

@@ -1,8 +1,9 @@
 package com.example.romankubik.kubikplayer.interaction.entity;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.graphics.Palette;
+
+import com.example.romankubik.kubikplayer.general.Constants;
 
 import java.util.UUID;
 
@@ -71,20 +72,25 @@ public class Track {
         return image;
     }
 
-    public void setImage(byte[] image) {
-        if (image != null) {
-            this.image = BitmapFactory.decodeByteArray(image, 0, image.length);
-            Palette palette = Palette.from(this.image).generate();
-            if (palette.getVibrantSwatch() != null) {
-                primaryColor = palette.getVibrantSwatch().getRgb();
-                secondaryColor = palette.getLightVibrantSwatch().getRgb();
-                bodyColor = palette.getDarkVibrantSwatch().getRgb();
-            } else {
-                primaryColor = palette.getMutedSwatch().getRgb();
-                secondaryColor = palette.getLightMutedSwatch().getRgb();
-                bodyColor = palette.getDarkMutedSwatch().getRgb();
-            }
+    public void setImage(Bitmap image) {
+        this.image = image;
+        Palette palette = Palette.from(this.image).generate();
+        if (palette.getVibrantSwatch() != null) {
+            primaryColor = palette.getVibrantSwatch().getRgb();
+            secondaryColor = palette.getLightVibrantSwatch().getRgb();
+            bodyColor = palette.getDarkVibrantSwatch().getRgb();
+        } else {
+            primaryColor = palette.getMutedSwatch().getRgb();
+            secondaryColor = palette.getLightMutedSwatch().getRgb();
+            bodyColor = palette.getDarkMutedSwatch().getRgb();
         }
+    }
+
+    public void setDefaultImage(Bitmap image) {
+        this.image = image;
+        primaryColor = Constants.Color.GRAY_LIGHT_DARK;
+        secondaryColor = Constants.Color.GRAY;
+        bodyColor = Constants.Color.GRAY_DARK;
     }
 
     public int getPrimaryColor() {

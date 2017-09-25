@@ -99,21 +99,12 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.Audi
 
         private void setItem(Track track) {
             tvSong.setText(track.getSong());
-            if (track.getArtist() != null) tvArtist.setText(track.getArtist());
-            else tvArtist.setText(R.string.unknown);
-            if (track.getImage() != null) {
-                clBackground.setBackgroundColor(track.getPrimaryColor());
-                ivStarred.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-                tvSong.setTextColor(track.getSecondaryColor());
-                tvArtist.setTextColor(track.getSecondaryColor());
-                ivPoster.setImageBitmap(track.getImage());
-            } else {
-                clBackground.setBackgroundColor(context.getResources().getColor(R.color.gray_light_dark));
-                ivStarred.setColorFilter(context.getResources().getColor(R.color.gray), PorterDuff.Mode.MULTIPLY);
-                tvSong.setTextColor(context.getResources().getColor(R.color.gray));
-                tvArtist.setTextColor(context.getResources().getColor(R.color.gray));
-                ivPoster.setImageDrawable(context.getDrawable(R.drawable.ic_album_gray_light_dark_24dp));
-            }
+            tvArtist.setText(track.getArtist());
+            clBackground.setBackgroundColor(track.getPrimaryColor());
+            ivStarred.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+            tvSong.setTextColor(track.getSecondaryColor());
+            tvArtist.setTextColor(track.getSecondaryColor());
+            ivPoster.setImageBitmap(track.getImage());
         }
 
         private void setOnItemClickListener(View.OnClickListener onClickListener) {
