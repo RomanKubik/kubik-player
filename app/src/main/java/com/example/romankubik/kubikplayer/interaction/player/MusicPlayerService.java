@@ -86,6 +86,7 @@ public class MusicPlayerService extends Service implements Interactor.Player, Ex
         startForeground(Constants.Service.SERVICE_ID, playerNotification);
         trackPosition = PlayList.getActualPlayList().indexOf(track);
         playTrack(track);
+        isPlaying.onNext(true);
     }
 
     @Override

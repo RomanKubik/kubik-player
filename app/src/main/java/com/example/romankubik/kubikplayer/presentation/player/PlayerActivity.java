@@ -19,6 +19,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.Transition;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.AccelerateInterpolator;
@@ -27,7 +28,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.romankubik.kubikplayer.R;
 import com.example.romankubik.kubikplayer.general.Constants;
@@ -103,8 +103,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
         component.playerComponent(new PlayerModule(this)).inject(this);
+        bindService();
         ButterKnife.bind(this);
-        getExtras();
         addTransitionListener();
         addProgressChangeListener();
     }
@@ -112,7 +112,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     @Override
     protected void onStart() {
         super.onStart();
-        bindService();
     }
 
     @Override
@@ -125,6 +124,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         playerPresenter.attach(((MusicPlayerService.PlayerBinder) service).getMusicService());
+        getExtras();
     }
 
     @Override
@@ -133,28 +133,86 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     }
 
     @Override
-    public void onTrackReceived(Track track, boolean isPlaying) {
+    public void onTrackReceived(Track track, boolean trackPlaying) {
         this.track = track;
-        tvDetails.setText(track.getSong());
-        tvSong.setText(track.getAlbum());
-        tvArtist.setText(track.getArtist());
-        if (isPlaying)
-            Toast.makeText(this, "Playing", Toast.LENGTH_SHORT).show();
-        if (track.getImage() != null) {
-            getWindow().setStatusBarColor(track.getPrimaryColor());
-            clDetails.setBackgroundColor(track.getSecondaryColor());
-            clNavigation.setBackgroundColor(track.getPrimaryColor());
-            Drawable fabImage = getDrawable(R.drawable.ic_play_arrow_white_24dp);
-            fabImage.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-            fabPlay.setImageDrawable(fabImage);
-            fabPlay.setBackgroundTintList(ColorStateList.valueOf(track.getPrimaryColor()));
-            ivPlayBack.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-            ivPlayForward.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-            ivPlayPause.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-            ivVolumeDown.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-            ivVolumeUp.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-            ivLogo.setImageBitmap(track.getImage());
-        }
+//        if (trackPlaying) {
+//            tvDetails.setText(track.getSong());
+//            fabPlay.setVisibility(View.INVISIBLE);
+//            fabPlay.setScaleX(ZERO_SCALE);
+//            fabPlay.setScaleY(ZERO_SCALE);
+//            clDetails.setVisibility(View.INVISIBLE);
+//            clNavigation.setBackgroundColor(track.getPrimaryColor());
+//
+//            clNavigation.setScaleX(NORMAL_SCALE);
+//            clNavigation.setScaleY(NORMAL_SCALE);
+//
+//            if (track.getImage() != null) {
+//                tvDetails.setBackgroundColor(track.getSecondaryColor());
+//                tvDetails.setTextColor(track.getBodyColor());
+//                ivPlayBack.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+//                ivPlayForward.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+//                ivPlayPause.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+//                ivVolumeDown.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+//                ivVolumeUp.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+//                ivLogo.setImageBitmap(track.getImage());
+//            }
+//            for (int i = 0; i < clNavigation.getChildCount(); i++) {
+//                View v = clNavigation.getChildAt(i);
+//                ViewPropertyAnimator animator = v.animate()
+//                        .setInterpolator(new DecelerateInterpolator(MATERIAL_INTERPOLATOR_FACTOR))
+//                        .scaleX(NORMAL_SCALE)
+//                        .scaleY(NORMAL_SCALE)
+//                        .setDuration(SHORTER_ANIMATION_DURATION);
+//
+//                animator.setStartDelay(i * 25);
+//                animator.start();
+//            }
+//        } else {
+            tvDetails.setText(track.getSong());
+            tvSong.setText(track.getAlbum());
+            tvArtist.setText(track.getArtist());
+            if (track.getImage() != null) {
+                getWindow().setStatusBarColor(track.getPrimaryColor());
+                clDetails.setBackgroundColor(track.getSecondaryColor());
+                clNavigation.setBackgroundColor(track.getPrimaryColor());
+                Drawable fabImage = getDrawable(R.drawable.ic_play_arrow_white_24dp);
+                fabImage.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+                fabPlay.setImageDrawable(fabImage);
+                fabPlay.setBackgroundTintList(ColorStateList.valueOf(track.getPrimaryColor()));
+                ivPlayBack.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+                ivPlayForward.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+                ivPlayPause.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+                ivVolumeDown.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+                ivVolumeUp.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+                ivLogo.setImageBitmap(track.getImage());
+            }
+            if (trackPlaying) {
+                fabPlay.setVisibility(View.INVISIBLE);
+                fabPlay.setScaleX(ZERO_SCALE);
+                fabPlay.setScaleY(ZERO_SCALE);
+                clDetails.setVisibility(View.INVISIBLE);
+                clNavigation.setBackgroundColor(track.getPrimaryColor());
+
+                clNavigation.setScaleX(NORMAL_SCALE);
+                clNavigation.setScaleY(NORMAL_SCALE);
+
+                tvDetails.setBackgroundColor(track.getSecondaryColor());
+                tvDetails.setTextColor(track.getBodyColor());
+
+                for (int i = 0; i < clNavigation.getChildCount(); i++) {
+                    View v = clNavigation.getChildAt(i);
+                    ViewPropertyAnimator animator = v.animate()
+                            .setInterpolator(new DecelerateInterpolator(MATERIAL_INTERPOLATOR_FACTOR))
+                            .scaleX(NORMAL_SCALE)
+                            .scaleY(NORMAL_SCALE)
+                            .setDuration(SHORTER_ANIMATION_DURATION);
+
+                    animator.setStartDelay(i * 25);
+                    animator.start();
+                }
+            }
+//        }
+
     }
 
     @Override
@@ -164,12 +222,12 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
 
     @Override
     public void onTrackChanged(Track track) {
-
+        Log.d("MyTag", "onTrackChanged: " + track.getSong());
     }
 
     @Override
     public void onPlayPause(boolean playing) {
-
+        Log.d("MyTag", "onPlayPause: " + playing);
     }
 
     @Override
@@ -307,8 +365,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
                 View v = clNavigation.getChildAt(i);
                 ViewPropertyAnimator animator = v.animate()
                         .setInterpolator(new DecelerateInterpolator(MATERIAL_INTERPOLATOR_FACTOR))
-                        .scaleX(1)
-                        .scaleY(1)
+                        .scaleX(NORMAL_SCALE)
+                        .scaleY(NORMAL_SCALE)
                         .setDuration(SHORTER_ANIMATION_DURATION);
 
                 animator.setStartDelay(i * 25);
