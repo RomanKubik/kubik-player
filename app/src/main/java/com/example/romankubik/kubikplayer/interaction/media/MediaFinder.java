@@ -51,7 +51,7 @@ public class MediaFinder implements Interactor.Finder {
                         File f = new File(data);
                         if (f.length() != 0) {
                             try {
-                                s.onNext(MediaMapper.mapFileToTrack(f));
+                                s.onNext(MediaMapper.mapFileToTrack(f, context));
                             } catch (Exception ignored) {
                             }
                         }
