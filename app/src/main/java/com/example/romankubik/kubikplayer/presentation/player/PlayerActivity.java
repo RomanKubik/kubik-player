@@ -6,9 +6,11 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -22,6 +24,8 @@ import android.transition.Transition;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -182,7 +186,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
         ivPlayPause.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
         ivVolumeDown.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
         ivVolumeUp.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-        ivLogo.setImageBitmap(track.getImage());
+        imageViewAnimatedChange(this, ivLogo, track.getImage());
     }
 
     @Override
@@ -449,6 +453,27 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     @OnClick(R.id.iv_volume_down)
     void onVolumeDownClicked() {
 
+    }
+
+    public static void imageViewAnimatedChange(Context c, final ImageView v, final Bitmap new_image) {
+        final Animation anim_out = AnimationUtils.loadAnimation(c, android.R.anim.fade_out);
+        final Animation anim_in = AnimationUtils.loadAnimation(c, android.R.anim.fade_in);
+        anim_out.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                v.setImageBitmap(new_image);
+                v.startAnimation(anim_in);
+            }
+        });
+        v.startAnimation(anim_out);
     }
 
 }
