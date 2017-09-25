@@ -19,7 +19,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.Transition;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.AccelerateInterpolator;
@@ -40,6 +39,7 @@ import com.example.romankubik.kubikplayer.presentation.player.di.PlayerModule;
 
 import javax.inject.Inject;
 
+import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -90,6 +90,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     @BindView(R.id.fab_holder)
     FrameLayout flFabContainer;
 
+    @BindDrawable(R.drawable.ic_play_arrow_white_24dp)
+    Drawable icPlayArrow;
+    @BindDrawable(R.drawable.ic_pause_white_24dp)
+    Drawable icPause;
+
     @Inject
     PlayerPresenter playerPresenter;
 
@@ -138,14 +143,14 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
         this.track = track;
         playingTrackFlag = trackPlaying;
         tvDetails.setText(track.getSong());
+        tvDetails.setBackgroundColor(Constants.Color.WHITE);
         tvSong.setText(track.getAlbum());
         tvArtist.setText(track.getArtist());
         getWindow().setStatusBarColor(track.getPrimaryColor());
         clDetails.setBackgroundColor(track.getSecondaryColor());
         clNavigation.setBackgroundColor(track.getPrimaryColor());
-        Drawable fabImage = getDrawable(R.drawable.ic_play_arrow_white_24dp);
-        fabImage.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
-        fabPlay.setImageDrawable(fabImage);
+        icPlayArrow.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+        fabPlay.setImageDrawable(icPlayArrow);
         fabPlay.setBackgroundTintList(ColorStateList.valueOf(track.getPrimaryColor()));
         ivPlayBack.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
         ivPlayForward.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
@@ -167,12 +172,25 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
 
     @Override
     public void onTrackChanged(Track track) {
-        Log.d("MyTag", "onTrackChanged: " + track.getSong());
+        tvDetails.setText(track.getSong());
+        tvDetails.setBackgroundColor(track.getSecondaryColor());
+        tvDetails.setTextColor(track.getBodyColor());
+        getWindow().setStatusBarColor(track.getPrimaryColor());
+        clNavigation.setBackgroundColor(track.getPrimaryColor());
+        ivPlayBack.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+        ivPlayForward.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+        ivPlayPause.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+        ivVolumeDown.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+        ivVolumeUp.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
+        ivLogo.setImageBitmap(track.getImage());
     }
 
     @Override
     public void onPlayPause(boolean playing) {
-        Log.d("MyTag", "onPlayPause: " + playing);
+        if (playing)
+            ivPlayPause.setImageDrawable(icPause);
+        else
+            ivPlayPause.setImageDrawable(icPlayArrow);
     }
 
     @Override
