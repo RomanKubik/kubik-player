@@ -8,6 +8,7 @@ public final class Constants {
 
     public static final class Intent {
         public static final String TRACK_EXTRA = "com.example.romankubik.kubikplayer.general.constants.intent.track.extra";
+        public static final String ACTION_VOLUME_CHANGE = "android.media.VOLUME_CHANGED_ACTION";
     }
 
     public static final class Service {

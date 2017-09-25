@@ -21,9 +21,7 @@ public class Interactor {
 
         void backward();
 
-        void louder();
-
-        void quieter();
+        void setVolume(int level);
 
         void setProgress(int position);
 
@@ -34,6 +32,8 @@ public class Interactor {
         Observable<Track> currentTrack();
 
         Observable<Integer> playProgress();
+
+        Observable<Integer> volumeLevel();
     }
 
     public interface Finder {

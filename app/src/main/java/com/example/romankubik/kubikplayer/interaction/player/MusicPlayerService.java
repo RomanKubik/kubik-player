@@ -2,7 +2,9 @@ package com.example.romankubik.kubikplayer.interaction.player;
 
 import android.app.Notification;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
@@ -38,14 +40,17 @@ import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
 
 import static com.example.romankubik.kubikplayer.general.android.PlayerApplication.component;
+import static com.example.romankubik.kubikplayer.general.utils.SeekbarMapper.mapLevelToVolume;
+import static com.example.romankubik.kubikplayer.general.utils.SeekbarMapper.mapProgressToTime;
+import static com.example.romankubik.kubikplayer.general.utils.SeekbarMapper.mapTimeToProgress;
+import static com.example.romankubik.kubikplayer.general.utils.SeekbarMapper.mapVolumeToLevel;
 
 /**
  * Created by roman.kubik on 8/16/17.
  */
 
-public class MusicPlayerService extends Service implements Interactor.Player, ExoPlayer.EventListener {
+public class MusicPlayerService extends Service implements Interactor.Player, ExoPlayer.EventListener, VolumeBroadcastReceiver.VolumeListener {
 
-    public static final int PROGRESS_MAX_SIZE = 1000;
     @Inject
     Interactor interactor;
 
@@ -53,8 +58,13 @@ public class MusicPlayerService extends Service implements Interactor.Player, Ex
     private BandwidthMeter bandwidthMeter;
     private Notification playerNotification;
 
+    private VolumeBroadcastReceiver volumeReceiver;
+    private AudioManager audioManager;
+    private int maxVolumeLevel;
+
     private BehaviorSubject<Track> currentTrack = BehaviorSubject.create();
     private BehaviorSubject<Boolean> isPlaying = BehaviorSubject.createDefault(false);
+    private BehaviorSubject<Integer> volumeLevel = BehaviorSubject.createDefault(0);
     private int trackPosition;
 
     private final IBinder playerBinder = new PlayerBinder();
@@ -77,6 +87,13 @@ public class MusicPlayerService extends Service implements Interactor.Player, Ex
         component.inject(this);
         initPlayer();
         prepareNotification();
+        prepareVolumeReceiver();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(volumeReceiver);
     }
 
     // region Interactor.Player
@@ -123,18 +140,13 @@ public class MusicPlayerService extends Service implements Interactor.Player, Ex
     }
 
     @Override
-    public void louder() {
-
-    }
-
-    @Override
-    public void quieter() {
-
+    public void setVolume(int level) {
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mapLevelToVolume(level, maxVolumeLevel), 0);
     }
 
     @Override
     public void setProgress(int position) {
-        exoPlayer.seekTo(mapProgressToTime(position));
+        exoPlayer.seekTo(mapProgressToTime(position, exoPlayer.getDuration()));
     }
 
     @Override
@@ -158,9 +170,28 @@ public class MusicPlayerService extends Service implements Interactor.Player, Ex
     public Observable<Integer> playProgress() {
         return Observable.interval(Constants.Time.SECOND_IN_MILIS, TimeUnit.MILLISECONDS)
                 .map(l -> exoPlayer.getCurrentPosition())
-                .map(this::mapTimeToProgress);
+                .map(p -> mapTimeToProgress(p, exoPlayer.getDuration()));
     }
 
+    @Override
+    public Observable<Integer> volumeLevel() {
+        return volumeLevel;
+    }
+
+    // endregion
+
+    // region Volume Broadcast Listeners
+    @Override
+    public void onVolumeChanged() {
+        volumeLevel.onNext(mapVolumeToLevel(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC), maxVolumeLevel));
+    }
+
+    @Override
+    public void onAudioBecomingNoisy() {
+        stopForeground(false);
+        exoPlayer.setPlayWhenReady(false);
+        isPlaying.onNext(false);
+    }
     // endregion
 
     // region ExoPlayer Events Listener
@@ -213,6 +244,15 @@ public class MusicPlayerService extends Service implements Interactor.Player, Ex
         playerNotification = new Notification.Builder(this).build();
     }
 
+    private void prepareVolumeReceiver() {
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        maxVolumeLevel = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        volumeReceiver = new VolumeBroadcastReceiver();
+        volumeReceiver.setVolumeListener(this);
+        registerReceiver(volumeReceiver, volumeReceiver.getIntentFilter());
+        onVolumeChanged();
+    }
+
     private MediaSource prepareMediaSource(Track track) {
         DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this,
                 Util.getUserAgent(this, "KubikPlayerApp"),
@@ -228,11 +268,4 @@ public class MusicPlayerService extends Service implements Interactor.Player, Ex
         exoPlayer.setPlayWhenReady(true);
     }
 
-    private int mapTimeToProgress(long progress) {
-        return (int) (progress * PROGRESS_MAX_SIZE / exoPlayer.getDuration());
-    }
-
-    private long mapProgressToTime(int progress) {
-        return progress * exoPlayer.getDuration() / PROGRESS_MAX_SIZE;
-    }
 }

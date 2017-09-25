@@ -107,7 +107,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
         bindService();
         ButterKnife.bind(this);
         addTransitionListener();
-        addProgressChangeListener();
+        addSeekBarChangeListeners();
     }
 
     @Override
@@ -155,36 +155,16 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
             ivVolumeUp.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
             ivLogo.setImageBitmap(track.getImage());
         }
-        if (trackPlaying) {
-//            fabPlay.setVisibility(View.INVISIBLE);
-//            fabPlay.setScaleX(ZERO_SCALE);
-//            fabPlay.setScaleY(ZERO_SCALE);
-//                clDetails.animate().alpha(0f).setDuration(ANIMATION_DURATION / 2);
-//            clNavigation.setBackgroundColor(track.getPrimaryColor());
-//
-//            clNavigation.setScaleX(NORMAL_SCALE);
-//            clNavigation.setScaleY(NORMAL_SCALE);
-//
-//            tvDetails.setBackgroundColor(track.getSecondaryColor());
-//            tvDetails.setTextColor(track.getBodyColor());
-//
-//            for (int i = 0; i < clNavigation.getChildCount(); i++) {
-//                View v = clNavigation.getChildAt(i);
-//                ViewPropertyAnimator animator = v.animate()
-//                        .setInterpolator(new DecelerateInterpolator(MATERIAL_INTERPOLATOR_FACTOR))
-//                        .scaleX(NORMAL_SCALE)
-//                        .scaleY(NORMAL_SCALE)
-//                        .setDuration(SHORTER_ANIMATION_DURATION);
-//
-//                animator.setStartDelay(i * 25);
-//                animator.start();
-//            }
-        }
     }
 
     @Override
     public void onProgressChanged(int progress) {
         sbMusic.setProgress(progress);
+    }
+
+    @Override
+    public void onVolumeChanged(int level) {
+        sbVolume.setProgress(level);
     }
 
     @Override
@@ -213,12 +193,30 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
         startService(intent);
     }
 
-    private void addProgressChangeListener() {
+    private void addSeekBarChangeListeners() {
         sbMusic.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser)
                     playerPresenter.setProgress(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // ignored
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // ignored
+            }
+        });
+
+        sbVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser)
+                    playerPresenter.setVolume(progress);
             }
 
             @Override

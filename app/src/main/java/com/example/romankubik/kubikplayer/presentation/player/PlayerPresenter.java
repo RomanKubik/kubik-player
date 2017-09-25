@@ -27,6 +27,8 @@ public class PlayerPresenter {
 
         void onProgressChanged(int progress);
 
+        void onVolumeChanged(int level);
+
         void onTrackChanged(Track track);
 
         void onPlayPause(boolean playing);
@@ -51,6 +53,8 @@ public class PlayerPresenter {
                 this.player.isPlaying().subscribe(p -> view.onPlayPause(p)));
         compositeDisposable.add(
                 this.player.currentTrack().subscribe(t -> view.onTrackChanged(t)));
+        compositeDisposable.add(
+                this.player.volumeLevel().subscribe(l -> view.onVolumeChanged(l)));
     }
 
     public void setTrack(String trackId) {
@@ -87,12 +91,8 @@ public class PlayerPresenter {
         player.backward();
     }
 
-    public void louder() {
-
-    }
-
-    public void quieter() {
-
+    public void setVolume(int level) {
+        player.setVolume(level);
     }
 
     public void setProgress(int progress) {
