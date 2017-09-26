@@ -13,6 +13,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -177,16 +178,25 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     @Override
     public void onTrackChanged(Track track) {
         tvDetails.setText(track.getSong());
-        tvDetails.setBackgroundColor(track.getSecondaryColor());
         tvDetails.setTextColor(track.getBodyColor());
         getWindow().setStatusBarColor(track.getPrimaryColor());
-        clNavigation.setBackgroundColor(track.getPrimaryColor());
         ivPlayBack.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
         ivPlayForward.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
         ivPlayPause.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
         ivVolumeDown.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
         ivVolumeUp.setColorFilter(track.getSecondaryColor(), PorterDuff.Mode.MULTIPLY);
         imageViewAnimatedChange(this, ivLogo, track.getImage());
+        animateBackgroundColor(tvDetails, track.getSecondaryColor());
+        animateBackgroundColor(clNavigation, track.getPrimaryColor());
+    }
+
+    private void animateBackgroundColor(View view, int colorTo) {
+        ColorDrawable colorDrawable = (ColorDrawable) view.getBackground();
+        int colorFrom = colorDrawable.getColor();
+        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+        colorAnimation.setDuration(SHORTER_ANIMATION_DURATION);
+        colorAnimation.addUpdateListener(animator -> view.setBackgroundColor((int) animator.getAnimatedValue()));
+        colorAnimation.start();
     }
 
     @Override
@@ -256,14 +266,15 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     private void addTransitionListener() {
         getWindow().getSharedElementEnterTransition().addListener(new Transition.TransitionListener() {
             @Override
-            public void onTransitionStart(Transition transition) {
-
-            }
+            public void onTransitionStart(Transition transition) {/*ignored*/}
 
             @Override
             public void onTransitionEnd(Transition transition) {
                 if (playingTrackFlag) {
-                    clDetails.animate().alpha(0f).setDuration(ANIMATION_DURATION * 2).setInterpolator(new DecelerateInterpolator(MATERIAL_INTERPOLATOR_FACTOR));
+                    clDetails.animate()
+                            .alpha(0f)
+                            .setDuration(ANIMATION_DURATION * 2)
+                            .setInterpolator(new DecelerateInterpolator(MATERIAL_INTERPOLATOR_FACTOR));
                     clNavigation.setBackgroundColor(track.getPrimaryColor());
 
                     clNavigation.setScaleX(NORMAL_SCALE);
@@ -289,19 +300,13 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
             }
 
             @Override
-            public void onTransitionCancel(Transition transition) {
-
-            }
+            public void onTransitionCancel(Transition transition) {/*ignored*/}
 
             @Override
-            public void onTransitionPause(Transition transition) {
-
-            }
+            public void onTransitionPause(Transition transition) {/*ignored*/}
 
             @Override
-            public void onTransitionResume(Transition transition) {
-
-            }
+            public void onTransitionResume(Transition transition) {/*ignored*/}
         });
     }
 
@@ -458,14 +463,14 @@ public class PlayerActivity extends AppCompatActivity implements PlayerPresenter
     public static void imageViewAnimatedChange(Context c, final ImageView v, final Bitmap new_image) {
         final Animation anim_out = AnimationUtils.loadAnimation(c, android.R.anim.fade_out);
         final Animation anim_in = AnimationUtils.loadAnimation(c, android.R.anim.fade_in);
+        anim_in.setDuration(SHORTER_ANIMATION_DURATION);
+        anim_out.setDuration(SHORTER_ANIMATION_DURATION);
         anim_out.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {
-            }
+            public void onAnimationStart(Animation animation) {/*ignored*/}
 
             @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
+            public void onAnimationRepeat(Animation animation) {/*ignored*/}
 
             @Override
             public void onAnimationEnd(Animation animation) {
