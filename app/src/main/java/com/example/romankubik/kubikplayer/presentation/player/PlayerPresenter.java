@@ -52,7 +52,11 @@ public class PlayerPresenter {
         compositeDisposable.add(
                 this.player.isPlaying().subscribe(p -> view.onPlayPause(p)));
         compositeDisposable.add(
-                this.player.currentTrack().subscribe(t -> view.onTrackChanged(t)));
+                this.player
+                        .currentTrack()
+                        .filter(t -> !this.track.equals(t))
+                        .map(t -> this.track = t)
+                        .subscribe(t -> view.onTrackChanged(t)));
         compositeDisposable.add(
                 this.player.volumeLevel().subscribe(l -> view.onVolumeChanged(l)));
     }
